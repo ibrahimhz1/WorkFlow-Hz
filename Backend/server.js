@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -25,9 +26,15 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/', require('./routes/root'));
 
-// api routes
-app.use('/api/employees', require('./routes/api/employeesRoute'));
+// routes imports
+const user = require('./routes/api/userRoutes');
+const project = require('./routes/api/projectRoutes');
 
+// api routes
+app.use('/api', user);
+app.use('/api', project);
+
+// 404 routes
 app.all('*', (req, res)=> {
     res.status(404);
     if(req.accepts('html')){
@@ -41,6 +48,10 @@ app.all('*', (req, res)=> {
 
 // error handler
 app.use(errorHandler)
+
+// database connection
+const connectDatabase = require('./configs/dbConfig');
+connectDatabase();
 
 app.listen(PORT, ()=> {
     console.log(`Server running on : http://localhost:${PORT}`);

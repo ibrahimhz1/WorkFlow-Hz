@@ -1,0 +1,23 @@
+// types of issues
+1. task
+2. sub task
+3. epic task 
+4. bug or errors 
+5. story 
+6. custom type -> name, description fields
+
+// task fields
+1. description fields
+summay and description
+
+2. context fields
+status
+assignee
+reporter
+priority
+labels
+due date
+time tracking
+start date
+category
+
