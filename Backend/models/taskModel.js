@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const TaskSchema = new mongoose.Schema({
+    projectId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Project",
+        required: true
+    },
     taskName: {
         type: String,
         required: [true, "Please Enter Name"],
@@ -21,21 +26,25 @@ const TaskSchema = new mongoose.Schema({
             },
             assignees: [
                 {
-                    name: mongoose.Schema.ObjectId,
-                    ref: "User",
-                    required: true
+                    _id: {
+                        type: mongoose.Schema.ObjectId,
+                        ref: "User",
+                        required: true
+                    }
                 }
             ],
             reporters: [
                 {
-                    name: mongoose.Schema.ObjectId,
-                    ref: "User",
-                    required: true
+                    _id: {
+                        type: mongoose.Schema.ObjectId,
+                        ref: "User",
+                        required: true
+                    }
                 }
             ],
             completed: {
                 type: Boolean,
-                required: true
+                default: false
             },
             label: [
                 {
@@ -55,21 +64,25 @@ const TaskSchema = new mongoose.Schema({
     ],
     assignees: [
         {
-            name: mongoose.Schema.ObjectId,
-            ref: "User",
-            required: true
+            _id: {
+                type: mongoose.Schema.ObjectId,
+                ref: "User",
+                required: true
+            }
         }
     ],
     reporters: [
         {
-            name: mongoose.Schema.ObjectId,
-            ref: "User",
-            required: true
+            _id: {
+                type: mongoose.Schema.ObjectId,
+                ref: "User",
+                required: true
+            }
         }
     ],
     completed: {
         type: Boolean,
-        required: true
+        default: false
     },
     label: [
         {

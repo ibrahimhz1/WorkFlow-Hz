@@ -29,10 +29,12 @@ app.use('/', require('./routes/root'));
 // routes imports
 const user = require('./routes/api/userRoutes');
 const project = require('./routes/api/projectRoutes');
+const task = require('./routes/api/taskRoutes')
 
 // api routes
 app.use('/api', user);
 app.use('/api', project);
+app.use('/api', task);
 
 // 404 routes
 app.all('*', (req, res)=> {
