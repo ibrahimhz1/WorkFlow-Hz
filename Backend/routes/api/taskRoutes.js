@@ -2,11 +2,25 @@ const express = require('express');
 const router = express.Router();
 
 // controller functions import
-const {createTask, getAllTasks, getLabelsOfTask, getTaskDetails, getSubTaskOfTask, getTasksCreatedByUser, getTasksAssignedForUser} = require('../../controllers/taskController')
+const {
+    createTask, 
+    getAllTasks, 
+    getLabelsOfTask, 
+    getTaskDetails, 
+    getSubTaskOfTask, 
+    getTasksCreatedByUser, 
+    getTasksAssignedForUser,
+    deleteTask,
+    updateTask
+} = require('../../controllers/taskController')
 
 // routes
 router.route("/task").post(createTask)
-router.route("/task/:id").get(getTaskDetails)
+router.route("/task/:id")
+    .get(getTaskDetails)
+    .delete(deleteTask)
+    .patch(updateTask)
+
 router.route("/task/labels").post(getLabelsOfTask)
 router.route("/task/subTask").post(getSubTaskOfTask)
 router.route("/tasks").get(getAllTasks)

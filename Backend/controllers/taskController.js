@@ -104,3 +104,25 @@ exports.getTasksAssignedForUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 
+// DELETE
+exports.deleteTask = catchAsyncErrors(async (req, res, next) => {
+    const task = await TaskModel.deleteOne({ _id: req.params.id });
+    if (!task) return res.status(400).json({ message: "Task not deleted" });
+    res.status(200).json({
+        success: true,
+        message: "Task deleted successfully"
+    })
+});
+
+// UPDATE
+exports.updateTask = catchAsyncErrors(async(req, res, next)=> {
+    const taskId = req.params.id;
+    const {taskName, description, subTask, assignees, reporters, label} = req.body;
+    const task = await TaskModel.updateOne({_id : taskId}, {$set: {taskName: taskName, description: description, subTask: subTask, assignees: assignees, reporters: reporters, label: label}});
+    if(!task) return res.status(400).json({message: "Task not updated"});
+    res.status(200).json({
+        success: true,
+        message: "Task updated successfully"
+    })
+});
+

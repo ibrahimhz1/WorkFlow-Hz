@@ -44,3 +44,25 @@ exports.getAllUsers = catchAsyncErrors(async(req, res, next)=> {
         users
     })
 });
+
+// DELETE
+exports.deleteUser = catchAsyncErrors(async(req, res, next)=> {
+    const user = await UserModel.deleteOne({_id : req.params.id});
+    if(!user) return res.status(400).json({message: "not deleted"});
+    res.status(200).json({
+        success: true,
+        message: `User deleted successfully`
+    });
+});
+
+// UPDATE
+exports.updateUser = catchAsyncErrors(async(req, res, next)=> {
+    const userId = req.params.id;
+    const { name, email, avatar } = req.body; 
+    const user = await UserModel.updateOne({_id : userId}, {$set: {name: name, email: email, avatar: avatar}});
+    if(!user) return res.status(400).json({message: "User not updated"});
+    res.status(200).json({
+        success: true,
+        message: "User updated successfully"
+    })
+});
