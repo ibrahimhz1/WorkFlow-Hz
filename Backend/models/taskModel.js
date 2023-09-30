@@ -86,8 +86,8 @@ const TaskSchema = new mongoose.Schema({
     },
     label: [
         {
-            labelName: {
-                type: String
+            _id: {
+                type: mongoose.Schema.ObjectId
             }
         }
     ],
