@@ -10,6 +10,7 @@ const {
     getSubTaskOfTask, 
     getTasksCreatedByUser, 
     getTasksAssignedForUser,
+    getAllUsersOfTask,
     deleteTask,
     updateTask
 } = require('../../controllers/taskController')
@@ -26,5 +27,6 @@ router.route("/task/subTask").post(getSubTaskOfTask)
 router.route("/tasks").get(getAllTasks)
 router.route("/tasks/created").post(getTasksCreatedByUser)
 router.route("/tasks/assigned").post(getTasksAssignedForUser)
+router.route("/task/users").post(getAllUsersOfTask)
 
 module.exports = router;

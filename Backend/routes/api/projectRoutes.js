@@ -8,7 +8,8 @@ const {
     getProjectDetails, 
     getProjectsOfUser, 
     deleteProject,
-    updateProject 
+    updateProject, 
+    getAllUsersOfProject
 } = require('../../controllers/projectController');
 const {getTasksofProject} = require('../../controllers/taskController')
 
@@ -20,7 +21,7 @@ router.route('/project/:id')
     .patch(updateProject)
 
 router.route('/project/tasks').post(getTasksofProject)
-
+router.route('/project/users').post(getAllUsersOfProject)
 
 // Admin
 router.route('/admin/projects').get(getAllProjects)

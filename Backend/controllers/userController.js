@@ -5,31 +5,34 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 // Employee Model Import
 const UserModel = require('../models/userModel');
 
+// JWT Send Token
+const sendToken = require('../utils/jwtToken');
 
-exports.registerUser = catchAsyncErrors(async(req, res, next)=> {
-    const {name, email, password, avatar} = req.body;
+exports.registerUser = catchAsyncErrors(async (req, res, next) => {
+    const { name, email, password, avatar } = req.body;
     const user = await UserModel.create({
         name, email, password,
         avatar: {
-            public_id: avatar.public_id, 
+            public_id: avatar.public_id,
             url: avatar.url
         }
     })
 
-    if(!user){
-        res.status(400).json({message: "user not created"});
+    if (!user) {
+        res.status(400).json({ message: "user not created" });
     }
 
-    res.status(201).json({success: true, 
+    res.status(201).json({
+        success: true,
         message: `User : ${name} is created successfully`
     });
 
 });
 
-exports.getUserDetails = catchAsyncErrors(async(req, res, next)=> {
+exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
     const user = await UserModel.findById(req.params.id);
-    
-    if(!user) return next(new ErrorHandler(`User does not exist with id : ${req.params.id}`));
+
+    if (!user) return next(new ErrorHandler(`User does not exist with id : ${req.params.id}`));
 
     res.status(200).json({
         success: true,
@@ -37,7 +40,7 @@ exports.getUserDetails = catchAsyncErrors(async(req, res, next)=> {
     })
 });
 
-exports.getAllUsers = catchAsyncErrors(async(req, res, next)=> {
+exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {
     const users = await UserModel.find();
     res.status(200).json({
         success: true,
@@ -46,9 +49,9 @@ exports.getAllUsers = catchAsyncErrors(async(req, res, next)=> {
 });
 
 // DELETE
-exports.deleteUser = catchAsyncErrors(async(req, res, next)=> {
-    const user = await UserModel.deleteOne({_id : req.params.id});
-    if(!user) return res.status(400).json({message: "not deleted"});
+exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+    const user = await UserModel.deleteOne({ _id: req.params.id });
+    if (!user) return res.status(400).json({ message: "not deleted" });
     res.status(200).json({
         success: true,
         message: `User deleted successfully`
@@ -56,13 +59,62 @@ exports.deleteUser = catchAsyncErrors(async(req, res, next)=> {
 });
 
 // UPDATE
-exports.updateUser = catchAsyncErrors(async(req, res, next)=> {
+exports.updateUser = catchAsyncErrors(async (req, res, next) => {
     const userId = req.params.id;
-    const { name, email, avatar } = req.body; 
-    const user = await UserModel.updateOne({_id : userId}, {$set: {name: name, email: email, avatar: avatar}});
-    if(!user) return res.status(400).json({message: "User not updated"});
+    const { name, email, avatar } = req.body;
+    const user = await UserModel.updateOne({ _id: userId }, { $set: { name: name, email: email, avatar: avatar } });
+    if (!user) return res.status(400).json({ message: "User not updated" });
     res.status(200).json({
         success: true,
         message: "User updated successfully"
     })
 });
+
+// LOGIN
+exports.loginUser = catchAsyncErrors(async (req, res, next) => {
+    const { email, password } = req.body;
+    if (!email, !password) {
+        return next(new ErrorHandler("Please Enter Email and Password", 400));
+    }
+
+    const user = await UserModel.findOne({ email: email }).select("+password");
+
+    if (!user) {
+        return next(new ErrorHandler("Invalid Email or Password", 401));
+    }
+
+    const isPasswordMatched = await user.comparePassword(password);
+
+    if (!isPasswordMatched) {
+        return next(new ErrorHandler("Invalid Email or Password", 401));
+    }
+
+    sendToken(user, 200, res);
+});
+
+// LOGOUT
+exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Logged out successfully"
+    });
+})
+
+// Get LoggedIn User Details
+exports.getLoggedInUserDetails = catchAsyncErrors(async (req, res, next) => {
+    const user = await UserModel.findById(req.user) ;
+    res.status(200).json({
+        success: true,
+        user
+    });
+});
+
+
+
+
+
