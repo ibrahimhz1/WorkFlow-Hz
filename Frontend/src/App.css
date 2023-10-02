@@ -1,0 +1,106 @@
+
+/* Header Style */
+#AppHeader{
+    border-top: 1.5px solid #333C43;
+    border-bottom: 1.5px solid #333C43;
+    width: 100vw;
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    /* border: 1px solid blue; */
+}
+
+.logoSection{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1.5vmax;
+    margin: 0px 2vmax;
+    /* border: 1px solid red; */
+}
+
+.navItemsSection{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1vmax;
+    /* border: 1px solid white; */
+}
+
+.searchBarSection{
+    border: 2px solid #333C43;
+    border-radius: 0.3vmax;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.searchBarSection>input{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    width: 10vmax;
+    padding: 0px 0.5vmax 0px 0.5vmax;
+}
+
+.userItemsDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1.5vmax;
+}
+
+.navItem{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid red; */
+    padding: 0.5vmax 0.5vmax;
+    cursor: pointer;
+}
+.navItem:hover{
+    background-color: #333c4394;
+    border-radius: 5px;
+}
+.navItem:active{
+    background-color: #77777794;
+}
+.navItem:enabled{
+    background-color: #77777794;
+}
+
+#content{
+    display: flex;
+}
+
+#sidebar{
+    width: 15vw;
+    height: calc(100vh - 8vh);
+    border-right: 1px solid #333C43;
+}
+
+#dashboard{
+    height: calc(100vh - 8vh);
+}
+
+.topNavigation{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px 1vmax;
+    width: calc(100vw - 15vw);
+    height: 7vh;
+    background-color: rgba(49, 59, 197, 0.212);
+}
+.path{
+    margin: 0px 0.5vmax;
+    cursor: pointer;
+}
+.path:hover{
+    text-decoration: underline;
+}
+
+.codeNum{
+    color: lightgreen;
+}

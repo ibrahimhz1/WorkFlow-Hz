@@ -1,14 +1,9 @@
 const mongoose = require('mongoose')
 
-const ProjectSchema = new mongoose.Schema({
+const OrganisationSchema = new mongoose.Schema({
     orgId: {
-        type: mongoose.Schema.ObjectId,
-        ref: "Organisation",
-        required: true,
-    },
-    projectId: {
         type: String,
-        required:  [true, "Please Enter Project ID"],
+        required: [true, "Please enter org Id"]
     },
     name: {
         type: String,
@@ -16,21 +11,20 @@ const ProjectSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, "Please Enter Description"],
     },
     createdDate: {
         type: Date,
         default: Date.now
     },
-    category: {
+    department: {
         type: String,
         required: true,
     },
-    projectLead: {
+    founder: {
         type: mongoose.Schema.ObjectId,
         ref: "User",
         required: true
     }
 });
 
-module.exports = mongoose.model('Project', ProjectSchema);
+module.exports = mongoose.model('Organisation', OrganisationSchema);
