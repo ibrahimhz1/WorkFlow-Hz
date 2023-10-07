@@ -12,7 +12,10 @@ const {
     getTasksAssignedForUser,// ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
     getAllUsersOfTask,      // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
     deleteTask,             // ["admin", "founder", "projectManager", "teamLeader"]
-    updateTask              // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
+    updateTask,              // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
+    getAllTasksOfOrganisation, // ["admin", "founder"]
+    getAllTasksOfProject,      // ["admin", "founder", "projectManager"]
+    getAllTasksOfTeam          // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
 } = require('../../controllers/taskController');
 
 const {isAuthenticatedUser, authorizedRoles} = require('../../middlewares/auth');
@@ -30,5 +33,9 @@ router.route("/tasks").get(isAuthenticatedUser, authorizedRoles("admin", "founde
 router.route("/tasks/created").post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader"), getTasksCreatedByUser)
 router.route("/tasks/assigned").post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getTasksAssignedForUser)
 router.route("/task/users").post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getAllUsersOfTask)
+
+router.route("/org/tasks").post(isAuthenticatedUser, authorizedRoles("admin", "founder"), getAllTasksOfOrganisation);
+router.route("/project/tasks").post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), getAllTasksOfProject);
+router.route("/team/tasks").post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getAllTasksOfTeam);
 
 module.exports = router;

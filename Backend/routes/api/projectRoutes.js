@@ -9,14 +9,10 @@ const {
     getProjectsOfUser,
     deleteProject,
     updateProject,
-    getAllUsersOfProject,
     getProjectsOfOrg,
-    addMembersInProject,
     getAllMembersOfProject,
     updateMembersOfProject
 } = require('../../controllers/projectController');
-
-const { getTasksofProject } = require('../../controllers/taskController');
 
 const { isAuthenticatedUser, authorizedRoles } = require('../../middlewares/auth');
 
@@ -27,12 +23,11 @@ router.route('/project/:id')
     .delete(isAuthenticatedUser, authorizedRoles("admin", "founder"), deleteProject)
     .patch(isAuthenticatedUser, authorizedRoles("admin", "founder"), updateProject);
 
-router.route('/project/tasks').post(isAuthenticatedUser, authorizedRoles("admin", "projectManager", "founder", "teamLeader", "teamMember"), getTasksofProject)
 router.route('/project/members').post(isAuthenticatedUser, authorizedRoles("admin", "projectManager", "founder", "teamLeader", "teamMember"), getAllMembersOfProject)
 
 router.route('/project/updateMembers').put(isAuthenticatedUser, authorizedRoles("projectManager"), updateMembersOfProject);
 
-router.route("/org/projects").post(isAuthenticatedUser, authorizedRoles("admin", "projectManager", "founder", "teamLeader", "teamMember"), getProjectsOfOrg);
+router.route("/org/projects").post(isAuthenticatedUser, authorizedRoles("admin", "founder"), getProjectsOfOrg);
 
 // Admin
 router.route('/projects').get(isAuthenticatedUser, authorizedRoles("admin", "founder"), getAllProjects);

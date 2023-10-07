@@ -1,9 +1,19 @@
 const mongoose = require('mongoose')
 
 const TaskSchema = new mongoose.Schema({
+    orgId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Organisation",
+        required: true
+    },
     projectId: {
         type: mongoose.Schema.ObjectId,
         ref: "Project",
+        required: true
+    },
+    teamId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Task",
         required: true
     },
     taskId: {

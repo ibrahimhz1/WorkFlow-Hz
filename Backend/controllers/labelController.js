@@ -8,8 +8,8 @@ const LabelModel = require('../models/labelModel');
 const TaskModel = require('../models/taskModel');
 
 exports.createLabel = catchAsyncErrors(async (req, res, next) => {
-    const { labelName } = req.body;
-    const label = await LabelModel.create({ labelName });
+    const { labelId, labelName } = req.body;
+    const label = await LabelModel.create({ labelId, labelName });
     if (!label) return res.status(400).json({ message: `${labelName}Label not created` });
     res.status(200).json({
         success: true,

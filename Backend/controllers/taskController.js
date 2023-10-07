@@ -7,7 +7,10 @@ const UserModel = require('../models/userModel');
 
 exports.createTask = catchAsyncErrors(async (req, res, next) => {
     const {
+        orgId,
         projectId,
+        teamId,
+        taskId,
         taskName,
         description,
         subTask,
@@ -18,7 +21,10 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
     } = req.body;
 
     const task = await TaskModel.create({
+        orgId,
         projectId,
+        teamId,
+        taskId,
         taskName,
         description,
         subTask,
@@ -40,18 +46,6 @@ exports.getTaskDetails = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         task
-    });
-});
-
-
-// get all tasks of the specific project
-exports.getTasksofProject = catchAsyncErrors(async (req, res, next) => {
-    const { id } = req.body;
-    const tasks = await TaskModel.find({ projectId: { $eq: id } });
-    if (!tasks) return res.status(400).json({ message: `No tasks found in this project id: ${id}` });
-    res.status(200).json({
-        success: true,
-        tasks
     });
 });
 
@@ -128,14 +122,14 @@ exports.getAllUsersOfTask = catchAsyncErrors(async (req, res, next) => {
         array.push(element._id.toString())
     });
     resultantUsers.subTaskUsers.forEach((element) => {
-        element.assignees.forEach((elem)=> {
+        element.assignees.forEach((elem) => {
             array.push(elem._id.toString())
         });
-        element.reporters.forEach((elem)=> {
+        element.reporters.forEach((elem) => {
             array.push(elem._id.toString())
         })
     })
-    
+
     function removeDuplicates(arr) {
         return arr.filter((item, index) => arr.indexOf(item) === index);
     }
@@ -144,7 +138,7 @@ exports.getAllUsersOfTask = catchAsyncErrors(async (req, res, next) => {
     const UserNames = [];
     async function getUserNames(arr) {
         const promises = arr.map(async (element) => {
-            const user = await UserModel.find({_id: element});
+            const user = await UserModel.find({ _id: element });
             UserNames.push(user[0]);
         });
         await Promise.all(promises);
@@ -173,11 +167,43 @@ exports.deleteTask = catchAsyncErrors(async (req, res, next) => {
 exports.updateTask = catchAsyncErrors(async (req, res, next) => {
     const taskId = req.params.id;
     const { taskName, description, subTask, assignees, reporters, label } = req.body;
-    const task = await TaskModel.updateOne({ _id: taskId }, { $set: { taskName: taskName, description: description, subTask: subTask, assignees: assignees, reporters: reporters, label: label } });
+    const task = await TaskModel.updateOne({ _id: taskId }, { $set: { taskName: taskName, description: description, subTask: subTask, assignees: assignees, reporters: reporters, completed: completed, label: label } });
     if (!task) return res.status(400).json({ message: "Task not updated" });
     res.status(200).json({
         success: true,
         message: "Task updated successfully"
     })
 });
+
+
+exports.getAllTasksOfOrganisation = catchAsyncErrors(async (req, res, next) => {
+    const { orgId } = req.body;
+    const tasks = await TaskModel.find({orgId: orgId});
+    if(!tasks) return res.status(400).json({message: "No tasks found"});
+    res.status(200).json({
+        success: true,
+        tasks
+    })
+})
+
+// get all tasks of the specific project
+exports.getAllTasksOfProject = catchAsyncErrors(async (req, res, next) => {
+    const { projectId } = req.body;
+    const tasks = await TaskModel.find({projectId: projectId});
+    if(!tasks) return res.status(400).json({message: "No tasks found"});
+    res.status(200).json({
+        success: true,
+        tasks
+    })
+})
+
+exports.getAllTasksOfTeam = catchAsyncErrors(async (req, res, next) => {
+    const { teamId } = req.body;
+    const tasks = await TaskModel.find({teamId: teamId});
+    if(!tasks) return res.status(400).json({message: "No tasks found"});
+    res.status(200).json({
+        success: true,
+        tasks
+    })
+})
 
