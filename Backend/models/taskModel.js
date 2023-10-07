@@ -6,9 +6,14 @@ const TaskSchema = new mongoose.Schema({
         ref: "Project",
         required: true
     },
+    taskId: {
+        type: String,
+        required: [true, "Please Enter Task Id"],
+        unique: true,
+    },
     taskName: {
         type: String,
-        required: [true, "Please Enter Name"],
+        required: [true, "Please Enter Name"]
     },
     description: {
         type: String,
@@ -16,6 +21,11 @@ const TaskSchema = new mongoose.Schema({
     },
     subTask: [
         {
+            subTaskId: {
+                type: String,
+                required: true,
+                unique: true
+            },
             subTaskName: {
                 type: String,
                 required: true,

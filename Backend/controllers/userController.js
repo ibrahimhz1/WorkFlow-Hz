@@ -1,7 +1,6 @@
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
-
 // Employee Model Import
 const UserModel = require('../models/userModel');
 
@@ -9,14 +8,14 @@ const UserModel = require('../models/userModel');
 const sendToken = require('../utils/jwtToken');
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-    const { name, email, password, avatar } = req.body;
+    const { userId, username, name, email, password, avatar, role } = req.body;
     const user = await UserModel.create({
-        name, email, password,
+        userId: userId, username, name, email, password, role,
         avatar: {
             public_id: avatar.public_id,
             url: avatar.url
         }
-    })
+    });
 
     if (!user) {
         res.status(400).json({ message: "user not created" });
@@ -26,7 +25,6 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
         success: true,
         message: `User : ${name} is created successfully`
     });
-
 });
 
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
@@ -113,8 +111,3 @@ exports.getLoggedInUserDetails = catchAsyncErrors(async (req, res, next) => {
         user
     });
 });
-
-
-
-
-

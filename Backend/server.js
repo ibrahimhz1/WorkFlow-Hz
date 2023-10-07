@@ -27,16 +27,22 @@ app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/root'));
 
 // routes imports
-const user = require('./routes/api/userRoutes');
-const project = require('./routes/api/projectRoutes');
-const task = require('./routes/api/taskRoutes')
-const label = require('./routes/api/labelRoutes');
+const admin = require('./routes/api/adminRoutes');     // 
+const org = require('./routes/api/organisationRoute'); // ✅
+const project = require('./routes/api/projectRoutes'); // ✅
+const team = require('./routes/api/teamRoutes');       // 
+const task = require('./routes/api/taskRoutes');       // ✅
+const label = require('./routes/api/labelRoutes');     // ✅
+const user = require('./routes/api/userRoutes');       // ✅
 
 // api routes
-app.use('/api', user);
+app.use('/api', admin);
+app.use('/api', org);
 app.use('/api', project);
+app.use('/api', team);
 app.use('/api', task);
 app.use('/api', label);
+app.use('/api', user);
 
 // 404 routes
 app.all('*', (req, res)=> {

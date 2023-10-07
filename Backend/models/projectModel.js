@@ -8,7 +8,8 @@ const ProjectSchema = new mongoose.Schema({
     },
     projectId: {
         type: String,
-        required:  [true, "Please Enter Project ID"],
+        required: [true, "Please Enter Project ID"],
+        unique: true
     },
     name: {
         type: String,
@@ -30,7 +31,15 @@ const ProjectSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "User",
         required: true
-    }
+    },
+    members: [
+        {
+            _id: {
+                type: mongoose.Schema.ObjectId,
+                ref: "User",
+            }
+        }
+    ]
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);

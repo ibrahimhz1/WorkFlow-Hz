@@ -2,32 +2,23 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcryptjs = require('bcrypt');
 const jsonWebToken = require('jsonwebtoken');
-const crypto = require('crypto');
 
-const UserSchema = new mongoose.Schema({
-    userId: {
+
+
+const AdminSchema = new mongoose.Schema({
+    adminId: {
         type: String,
-        required: [true, "Please Enter userId"],
-        validate: {
-            validator: async function (userId) {
-                const user = await this.constructor.findOne({ userId });
-                return !user; // Return true if userId is unique, false otherwise
-            },
-            message: "userId must be unique",
-        },
-    },
-    username: {
-        type: String,
-        required: [true, "Please enter username"],
-        maxLength: [30, "Username cannot exceed 20 characters"],
-        minLength: [4, "Name should have more than 5 characters"],
+        required: true,
         unique: true
     },
     name: {
         type: String,
-        required: [true, "Please Enter your name"],
-        maxLength: [30, "Name cannot exceed 30 characters"],
-        minLength: [4, "Name should have more than 5 characters"]
+        required: true
+    },
+    username: {
+        type: String,
+        required: true,
+        unique: true
     },
     email: {
         type: String,
@@ -39,7 +30,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter your password"],
         minLength: [8, "Password should be greater than 8 characters"],
-        select: false,
+        select: false
     },
     avatar: {
         public_id: {
@@ -53,7 +44,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        required: true
+        default: "admin"
     },
     cretedAt: {
         type: Date,
@@ -64,7 +55,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 // Before Saving in Database
-UserSchema.pre("save", async function (next) {
+AdminSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
         next();
     }
@@ -72,17 +63,17 @@ UserSchema.pre("save", async function (next) {
 });
 
 // Compare Password
-UserSchema.methods.comparePassword = async function (enteredPassword) {
+AdminSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcryptjs.compare(enteredPassword, this.password);
 }
 
 // JWT - Token
-UserSchema.methods.getJWTToken = function () {
+AdminSchema.methods.getJWTToken = function () {
     return jsonWebToken.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     });
 }
 
 
+module.exports = mongoose.model("Admin", AdminSchema);
 
-module.exports = mongoose.model("User", UserSchema);

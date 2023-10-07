@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const OrganisationSchema = new mongoose.Schema({
     orgId: {
         type: String,
-        required: [true, "Please enter org Id"]
+        required: [true, "Please enter org Id"],
+        unique: true
     },
     name: {
         type: String,
