@@ -10,7 +10,7 @@ const Layout = () => {
         <div id='generalLayout'>
             <Header />
             <Outlet />
-            <Footer />
+            {/* <Footer /> */}
         </div>
     )
 }

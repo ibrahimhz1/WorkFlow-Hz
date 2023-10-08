@@ -9,6 +9,8 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
 
+import AccountBtn from './accountButton/AccountBtn';
+
 const AppHeader = () => {
     return (
         <div id='AppHeader'>
@@ -39,7 +41,8 @@ const AppHeader = () => {
                     <SettingsIcon style={{fontSize: '1.4vmax'}}/>
                 </div>
                 <div className='userItem'>
-                    <AccountCircleOutlinedIcon style={{fontSize: '1.4vmax'}}/>
+                    {/* <AccountCircleOutlinedIcon style={{fontSize: '1.4vmax'}}/> */}
+                    <AccountBtn />
                 </div>
             </div>
         </div>

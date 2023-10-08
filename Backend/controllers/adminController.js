@@ -6,10 +6,11 @@ const AdminModel = require('../models/adminModel');
 // JWT Send Token
 const sendToken = require('../utils/jwtToken');
 
-exports.registerAdmin = catchAsyncErrors(async(req, res, next)=> {
-    const {adminId, name, username, email, password, avatar } = req.body;
+exports.registerAdmin = catchAsyncErrors(async (req, res, next) => {
+    const { adminId, name, username, email, password, avatar, role } = req.body;
+
     const admin = await AdminModel.create({
-        adminId, name, username, email, password,
+        adminId, name, username, email, password, role,
         avatar: {
             public_id: avatar.public_id,
             url: avatar.url
@@ -26,7 +27,7 @@ exports.registerAdmin = catchAsyncErrors(async(req, res, next)=> {
     });
 });
 
-exports.loginAdmin = catchAsyncErrors(async(req, res, next)=> {
+exports.loginAdmin = catchAsyncErrors(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email, !password) {
         return next(new ErrorHandler("Please Enter Email and Password", 400));
@@ -46,8 +47,8 @@ exports.loginAdmin = catchAsyncErrors(async(req, res, next)=> {
     sendToken(admin, 200, res);
 });
 
-exports.getLoggedInAdminProfile = catchAsyncErrors(async(req, res, next)=> {
-    const admin = await AdminModel.findById(req.user) ;
+exports.getLoggedInAdminProfile = catchAsyncErrors(async (req, res, next) => {
+    const admin = await AdminModel.findById(req.user);
     res.status(200).json({
         success: true,
         admin

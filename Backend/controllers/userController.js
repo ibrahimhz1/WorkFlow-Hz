@@ -71,6 +71,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
 // LOGIN
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     const { email, password } = req.body;
+    
     if (!email, !password) {
         return next(new ErrorHandler("Please Enter Email and Password", 400));
     }

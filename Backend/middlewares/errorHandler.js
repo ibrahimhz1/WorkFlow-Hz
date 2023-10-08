@@ -1,9 +1,18 @@
 const { logEvents } = require('./logEvents');
 
-const errorHandler = (err, req, res, next) => {
-    logEvents(`${err.name} : ${err.message}`, 'errLog.txt');
-    console.error(err.stack);
-    res.status(500).send(err.message);
-};
+class ErrorHandler extends Error{
+    constructor(message, statusCode){
+        super(message),
+        this.statusCode = statusCode
 
-module.exports = errorHandler;
+        Error.captureStackTrace(this, this.constructor);
+    }
+}
+
+// const errorHandler = (err, req, res, next) => {
+//     logEvents(`${err.name} : ${err.message}`, 'errLog.txt');
+//     console.error(err.stack);
+//     res.status(500).send(err.message);
+// };
+
+module.exports = ErrorHandler;

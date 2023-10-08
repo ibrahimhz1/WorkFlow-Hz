@@ -1,0 +1,39 @@
+#loginButton {
+    font-size: 1.1vmax;
+    color: #e1e1e1;
+    font-family: inherit;
+    font-weight: bolder;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: none;
+    text-transform: uppercase;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: color;
+}
+
+#loginButton:focus,
+#loginButton:hover {
+    color: #fff;
+}
+
+#loginButton:focus:after,
+#loginButton:hover:after {
+    width: 100%;
+    left: 0%;
+}
+
+#loginButton:after {
+    content: "";
+    pointer-events: none;
+    bottom: -2px;
+    left: 50%;
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: #fff;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: width, left;
+}
