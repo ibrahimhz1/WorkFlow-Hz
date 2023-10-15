@@ -10,18 +10,18 @@ const BASE_URL = `http://localhost:3500/api`;
 
 export const loginAdmin = createAsyncThunk(
     'admin/login',
-    async({email, password})=> {
-        const response = await axios.post(`${BASE_URL}/admin/login`, {email: email, password: password});
-        if(response.data.user){
+    async ({ email, password }) => {
+        const response = await axios.post(`${BASE_URL}/admin/login`, { email: email, password: password });
+        if (response.data.user) {
             localStorage.setItem('user', JSON.stringify(response.data.user));
         }
-        return response.data.success;
+        return response.data.user;
     }
 );
 
 export const registerAdmin = createAsyncThunk(
     'admin/register',
-    async(credentials)=> {
+    async (credentials) => {
         const credObj = {
             adminId: credentials.adminId,
             name: credentials.name,
@@ -33,7 +33,7 @@ export const registerAdmin = createAsyncThunk(
         }
 
         const response = await axios.post(`${BASE_URL}/admin/register`, credObj);
-        if(response.data.success){
+        if (response.data.success) {
             return response.data.success;
         }
     }
@@ -41,9 +41,10 @@ export const registerAdmin = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     'user/login',
-    async({email, password})=> {
-        const response = await axios.post(`${BASE_URL}/login`, {email: email, password: password});
-        if(response.data.user){
+    async ({ email, password }) => {
+        axios.defaults.withCredentials = true
+        const response = await axios.post(`${BASE_URL}/login`, { email: email, password: password });
+        if (response.data.user) {
             localStorage.setItem('user', JSON.stringify(response.data.user));
         }
         return response.data.user;
@@ -52,7 +53,7 @@ export const loginUser = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
     'user/register',
-    async(credentials)=> {
+    async (credentials) => {
         const credObj = {
             userId: credentials.adminId,
             name: credentials.name,
@@ -64,7 +65,7 @@ export const registerUser = createAsyncThunk(
         }
 
         const response = await axios.post(`${BASE_URL}/register`, credObj);
-        if(response.data.success){
+        if (response.data.success) {
             localStorage.removeItem('user');
             return response.data.success;
         }
@@ -73,8 +74,12 @@ export const registerUser = createAsyncThunk(
 
 export const logout = createAsyncThunk(
     'user/logout',
-    async()=> {
-        
+    async () => {
+        const response = await axios.post(`${BASE_URL}/logout`);
+        if (response.data.success) {
+            localStorage.removeItem("user");
+            return true;
+        }
     }
 )
 
@@ -84,45 +89,45 @@ export const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(loginAdmin.pending, (state, action)=> {
+            .addCase(loginAdmin.pending, (state, action) => {
                 state.status = 'pending';
             })
-            .addCase(loginAdmin.rejected, (state, action)=> {
+            .addCase(loginAdmin.rejected, (state, action) => {
                 state.status = 'idle';
                 state.error = action.payload
             })
-            .addCase(loginAdmin.fulfilled, (state, action)=> {
+            .addCase(loginAdmin.fulfilled, (state, action) => {
                 state.status = 'idle';
-                if(action.payload){
+                if (action.payload) {
                     state.loggedInUser = action.payload;
-                    
-                }else{
+
+                } else {
                     state.loggedInUser = undefined;
                 }
             })
-            .addCase(registerAdmin.pending, (state, action)=> {
+            .addCase(registerAdmin.pending, (state, action) => {
                 state.status = 'pending';
             })
-            .addCase(registerAdmin.rejected, (state, action)=> {
+            .addCase(registerAdmin.rejected, (state, action) => {
                 state.status = 'idle';
                 state.error = action.payload
             })
-            .addCase(registerAdmin.fulfilled, (state, action)=> {
+            .addCase(registerAdmin.fulfilled, (state, action) => {
                 state.status = 'idle'
             })
-            .addCase(logout.pending, (state, action)=> {
+            .addCase(logout.pending, (state, action) => {
                 state.status = 'pending'
             })
-            .addCase(logout.rejected, (state, action)=> {
+            .addCase(logout.rejected, (state, action) => {
                 state.status = 'idle'
             })
-            .addCase(logout.fulfilled, (state, action)=> {
+            .addCase(logout.fulfilled, (state, action) => {
                 state.status = undefined,
-                state.loggedInUser = undefined
+                    state.loggedInUser = undefined
             })
     }
 });
 
-export const {} = userSlice.actions;
+export const { } = userSlice.actions;
 
 export default userSlice.reducer;

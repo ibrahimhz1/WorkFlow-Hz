@@ -19,7 +19,8 @@ router.route('/register').post(isAuthenticatedUser, authorizedRoles("admin", "fo
 
 router.route('/login').post(loginUser);
 
-router.route("/logout").get(isAuthenticatedUser, logoutUser);
+// router.route("/logout").post(isAuthenticatedUser, logoutUser);
+router.route("/logout").post(logoutUser);
 
 router.route("/me").get(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getLoggedInUserDetails);
 

@@ -1,5 +1,6 @@
 /* Header Style */
 #AppHeader {
+    position: fixed;
     border-top: 1.5px solid #333C43;
     border-bottom: 1.5px solid #333C43;
     width: 100vw;
@@ -8,6 +9,7 @@
     align-items: center;
     justify-content: space-around;
     /* border: 1px solid blue; */
+    background-color: #0d0c22;
 }
 
 #Header {
@@ -85,10 +87,14 @@
 }
 
 #content {
+    padding-left: 16vmax;
+    padding-top: 5vmax;
     display: flex;
 }
 
 #sidebar {
+    position: fixed;
+    left: 0;
     width: 15vw;
     height: calc(100vh - 8vh);
     border-right: 1px solid #333C43;
@@ -193,13 +199,13 @@
     gap: 2vmax;
 }
 
-.registerForm .row {
+.registerForm>.rows {
     display: flex;
-    gap: 10vmax;
+    gap: 1vmax;
     align-items: center;
 }
 
-.registerForm .row>.left>label {
+.registerForm>.rows>.left>label {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -207,7 +213,7 @@
     gap: 1vmax;
 }
 
-.registerForm .row>.left {
+.registerForm>.rows>.left {
     width: 20%;
 }
 
@@ -291,9 +297,9 @@ input:hover {
     align-items: center;
     position: relative;
     max-width: 200px;
-  }
-  
-  .emailInput {
+}
+
+.emailInput {
     width: 100%;
     line-height: 30px;
     padding: 0 5rem;
@@ -304,23 +310,184 @@ input:hover {
     background-color: #f8fafc;
     color: #0d0c22;
     transition: .5s ease;
-  }
-  
-  .emailInput::placeholder {
+}
+
+.emailInput::placeholder {
     color: #94a3b8;
-  }
-  
-  .emailInput:focus, input:hover {
+}
+
+.emailInput:focus,
+input:hover {
     outline: none;
     border-color: rgba(129, 140, 248);
     background-color: #fff;
     box-shadow: 0 0 0 5px rgb(129 140 248 / 30%);
-  }
-  
-  .emailicon {
+}
+
+.emailicon {
     position: absolute;
     left: 1rem;
     fill: none;
     width: 1rem;
     height: 1rem;
-  }
+}
+
+.createForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1vmax;
+}
+
+.createForm>.upper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2vmax;
+}
+
+.createForm>.lower>form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vmax;
+}
+
+.org-create-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4vmax;
+}
+
+.org-create-form>.row1 {
+    display: flex;
+    align-items: center;
+    gap: 1vmax;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.org-create-form>.row2 {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+}
+
+.org-create-form>.row2>.row2Left {
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+    align-items: flex-end;
+    padding-top: 1vmax;
+}
+
+.org-create-form>.row2>.row2Right {
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+    padding-left: 2vmax;
+    justify-content: start;
+}
+
+.org-create-form>.row2>.row2LeftMost {
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+    align-items: flex-end;
+    padding-top: 1vmax;
+    margin-left: 10vmax;
+}
+
+.org-create-form>.row2>.row2RightMost {
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+    padding-left: 2vmax;
+    justify-content: start;
+}
+
+
+
+/* Users Sections */
+.usersListComp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.usersListComp>.userHeader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.usercreateForm {
+    display: flex;
+    gap: 5vmax;
+}
+
+.usercreateForm>.left {
+    padding: 2vmax;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5vmax;
+}
+
+.usercreateForm>.right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vmax;
+}
+
+.usercreateForm>.right>.rows {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2vmax;
+}
+
+.orgsDiv {
+    display: flex;
+    align-items: center;
+}
+
+.orgCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 5vmax;
+    width: 18vmax;
+    margin: 1vmax;
+    cursor: pointer;
+}
+.orgCard:hover{
+    background-color: rgb(238, 238, 238);
+}
+.projectDiv{
+    display: flex;
+    align-items: center;
+}
+.projectCard{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 5vmax;
+    width: 18vmax;
+    margin: 1vmax;
+    cursor: pointer;
+}
+.projectCard:hover{
+    background-color: rgb(238, 238, 238);
+}
+
+.linkStyle{ 
+    color: whitesmoke;
+    text-decoration: none;
+}
+.linkStyle:hover{
+    text-decoration: underline;
+}

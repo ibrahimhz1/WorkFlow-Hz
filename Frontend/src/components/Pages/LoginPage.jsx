@@ -14,21 +14,21 @@ import { loginAdmin } from "../../features/user/userSlice";
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    
+
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const dispatch = useDispatch();
     
     const onSubmitHandler = async() => {
-        const response = await dispatch(loginAdmin({ email: email, password: password }));
-        if(response){
+        await dispatch(loginAdmin({ email: email, password: password }));
+
+        if(JSON.parse(localStorage.getItem('user'))){
             navigate('/app');
         }
     }
 
     return (
         <div id='loginPage'>
-
             <div className='registerPageContent'>
                 <div className='upperHeader'>
                     <h1>Already an Member ?</h1>
@@ -36,7 +36,7 @@ const LoginPage = () => {
                 </div>
                 <div className="middleContent">
                     <form className='registerForm' onSubmit={(e) => e.preventDefault()}>
-                        <div className="row">
+                        <div className="rows">
                             <div className="left"><label><span>Username / Email Address</span> </label></div>
                             <div className="right">
                                 <div className="emailGroup">
@@ -50,7 +50,7 @@ const LoginPage = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="rows">
                             <div className="left"><label><span>Password</span> </label></div>
                             <div className="right">
                                 <div className="passwordGroup">

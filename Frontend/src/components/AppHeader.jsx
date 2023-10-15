@@ -4,12 +4,15 @@ import React from 'react'
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HelpIcon from '@mui/icons-material/Help';
 import SettingsIcon from '@mui/icons-material/Settings';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import AddIcon from '@mui/icons-material/Add';
 
 import AccountBtn from './accountButton/AccountBtn';
+import MenuItemProjects from './headerMenuItems/MenuItemProjects';
+import MenuItemOrgs from './headerMenuItems/MenuItemOrgs'
+import MenuItemTeams from './headerMenuItems/MenuItemTeams';
+import MenuItemCreate from './headerMenuItems/MenuItemCreate';
+import MenuItemUsers from './headerMenuItems/MenuItemUsers';
 
 const AppHeader = () => {
     return (
@@ -18,13 +21,13 @@ const AppHeader = () => {
                 <span>AI Flow </span>
             </div>
             <div className='navItemsSection'>
-                <div className='navItem'>Organization <ArrowDropDownIcon style={{fontSize: '1.4vmax'}} /> </div>
-                <div className='navItem'>Projects <ArrowDropDownIcon style={{fontSize: '1.4vmax'}} /></div>
+                <MenuItemOrgs />
+                <MenuItemProjects />
                 <div className='navItem'>Filters <ArrowDropDownIcon style={{fontSize: '1.4vmax'}} /></div>
                 <div className='navItem'>Dashboards<ArrowDropDownIcon style={{fontSize: '1.4vmax'}} /></div>
-                <div className='navItem'>Teams <ArrowDropDownIcon style={{fontSize: '1.4vmax'}} /></div>
-                <div className='navItem'>Agenda<ArrowDropDownIcon style={{fontSize: '1.4vmax'}} /></div>
-                <div className='navItem createBlue'>Create<AddIcon style={{fontSize: '1.4vmax'}} /></div>
+                <MenuItemTeams />
+                <MenuItemUsers />
+                <MenuItemCreate />
             </div>
             <div className='searchBarSection'>
                 <input type="text" placeholder='Search / '/>

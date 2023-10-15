@@ -54,13 +54,13 @@ const RegisterPage = () => {
         </div>
         <div className="middleContent">
           <form className='registerForm' onSubmit={(e) => e.preventDefault()}>
-            <div className="row">
+            <div className="rows">
               <div className="left"><label><span>Admin / Founder - Id : </span> </label></div>
               <div className="right">
                 <input className="inputbox" placeholder="text" value={adminId} onChange={(e) => setAdminId(e.target.value)} />
               </div>
             </div>
-            <div className="row">
+            <div className="rows">
               <div className='left'>
                 <label><DropDownButton role={role} setRole={setRole} /> <span>Name</span> </label>
               </div>
@@ -68,13 +68,13 @@ const RegisterPage = () => {
                 <input className="inputbox" placeholder="text" value={adminName} onChange={(e) => setAdminName(e.target.value)} />
               </div>
             </div>
-            <div className="row">
+            <div className="rows">
               <div className="left"><label><span>Username</span> </label></div>
               <div className="right">
                 <input className="inputbox" placeholder="text" value={username} onChange={(e) => setUsername(e.target.value)} />
               </div>
             </div>
-            <div className="row">
+            <div className="rows">
               <div className="left"><label><span>Email Address</span> </label></div>
               <div className="right">
                 <div className="emailGroup">
@@ -83,7 +83,7 @@ const RegisterPage = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="rows">
               <div className="left"><label><span>Password</span> </label></div>
               <div className="right">
                 <div className="passwordGroup">
@@ -92,7 +92,7 @@ const RegisterPage = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="rows">
               <div className="left"><label><span>Confirm Password</span> </label></div>
               <div className="right">
                 <div className="passwordGroup">
@@ -101,7 +101,7 @@ const RegisterPage = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="rows">
               <div className="left"><label><span>Organisation Name</span> </label></div>
               <div className="right">
                 <input className="inputbox" placeholder="text" value={orgName} onChange={(e) => setOrgName(e.target.value)} />

@@ -9,10 +9,10 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import Tooltip from '@mui/material/Tooltip';
 
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 // react redux
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../features/user/userSlice';
 
 const AccountBtn = () => {
@@ -27,12 +27,12 @@ const AccountBtn = () => {
         setAnchorEl(null);
     };
 
-    const handleLogout = async() => {
+    const handleLogout = async () => {
         const response = await dispatch(logout());
-        if(response){
+        if(response.payload){
             navigate('/login');
+            handleClose();
         }
-        handleClose();
     }
 
     return (

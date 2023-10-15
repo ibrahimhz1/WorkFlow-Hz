@@ -3,7 +3,7 @@ import "./submitBtn.css"
 
 const SubmitBtn = ({onSubmitHandler, text}) => {
     return (
-        <button id="submitBtn" onClick={()=> onSubmitHandler()}>
+        <button value={"createUser"} id="submitBtn" onClick={()=>onSubmitHandler()}>
             {text}
         </button>
     )
