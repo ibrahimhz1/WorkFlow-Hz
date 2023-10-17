@@ -16,6 +16,7 @@ import Org from './features/organisation/Org'
 import RegisterPage from "./components/Pages/RegisterPage";
 import Homepage from './components/Pages/Homepage';
 import LoginPage from "./components/Pages/LoginPage";
+import AdminLoginPage from './components/Pages/AdminLoginPage'
 import SetupPage from "./components/Pages/SetupPage";
 
 
@@ -31,6 +32,7 @@ const App = () => {
         <Route index element={<Homepage />} />
         <Route path="/registerApp" element={isLoggedIn ? <Navigate to="/app" /> : <RegisterPage />} />
         <Route path="/login" element={isLoggedIn ? <Navigate to="/app" /> : <LoginPage />} />
+        <Route path="/admin/login" element={isLoggedIn ? <Navigate to="/app" /> : <AdminLoginPage />} />
         <Route path="/setup" element={<SetupPage />} />
       </Route>
 

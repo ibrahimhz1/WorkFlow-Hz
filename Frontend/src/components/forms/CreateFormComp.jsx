@@ -64,14 +64,24 @@ const ToggleMode = ({ type, setType }) => {
 
 
 import { createOrg } from '../../features/organisation/orgSlice';
-const OrganisationCreateForm = ({ userId }) => {
+
+const OrganisationCreateForm = ({ setShow, setToastMsg }) => {
   const [orgId, setOrgId] = useState('');
   const [orgName, setOrgName] = useState('');
   const [desc, setDesc] = useState('');
+  const [dept, setDept] = useState('undefined');
+
   const dispatch = useDispatch();
-  const onSubmitHandler = async() => {
-    await dispatch(createOrg({userId, orgId, orgName, desc}));
-    
+  const onSubmitHandler = async () => {
+    const response = await dispatch(createOrg({ orgId, orgName, desc, dept }));
+    if (response.payload) {
+      setShow(true);
+      setToastMsg(`${orgId} - ${orgName} created successfully`);
+      setOrgId('');
+      setOrgName('');
+      setDesc('');
+      setDept('');
+    }
   }
 
   return (
@@ -91,11 +101,13 @@ const OrganisationCreateForm = ({ userId }) => {
             <p>Organisation ID</p>
             <p>Organisation Name</p>
             <p>Description</p>
+            <p>Department</p>
           </div>
           <div className='row2Right'>
             <Form.Control type="text" placeholder="Organisation 0-1" value={orgId} onChange={(e) => setOrgId(e.target.value)} />
             <Form.Control type="text" placeholder="Datamoth" value={orgName} onChange={(e) => setOrgName(e.target.value)} />
             <Form.Control type="text" placeholder="Description" value={desc} onChange={(e) => setDesc(e.target.value)} />
+            <Form.Control type="text" placeholder="Department" value={dept} onChange={(e) => setDept(e.target.value)} />
           </div>
         </div>
       </div>
@@ -108,6 +120,8 @@ const OrganisationCreateForm = ({ userId }) => {
 const ProjectCreateForm = () => {
   const theme = useTheme();
   const [members, setMembers] = React.useState([]);
+  const projectManagers = useSelector((state) => state.user.projectManagers);
+  const teamMembers = useSelector((state) => state.user.teamMembers);
 
   const handleChange = (event) => {
     const {
@@ -151,7 +165,12 @@ const ProjectCreateForm = () => {
             <Form.Control type="text" placeholder="Description" />
             <Form.Control type="text" placeholder="Category" />
             <Form.Select size="sm">
-              <option>Ibrahim Hz</option>
+              {
+                projectManagers.map((projMan) => (
+                  <option key={projMan._id}>{projMan.name}</option>
+                ))
+              }
+
             </Form.Select>
             <Select
               sx={{
@@ -184,13 +203,13 @@ const ProjectCreateForm = () => {
               )}
               MenuProps={MenuProps}
             >
-              {names.map((name) => (
+              {teamMembers.map((member) => (
                 <MenuItem
-                  key={name}
-                  value={name}
+                  key={member._id}
+                  value={member.name}
                   style={getStyles(name, members, theme)}
                 >
-                  {name}
+                  {member.name}
                 </MenuItem>
               ))}
             </Select>
@@ -562,9 +581,12 @@ const TaskCreateForm = ({ classes }) => {
   );
 }
 
+
+import ToastComp from '../toast/ToastComp';
 const CreateFormComp = () => {
   const [type, setType] = useState('org');
-  const userId = useSelector(state => state.user.loggedInUser);
+  const [show, setShow] = useState(null);
+  const [toastMsg, setToastMsg] = useState('');
 
   return (
     <div className='createForm'>
@@ -575,12 +597,13 @@ const CreateFormComp = () => {
       <hr />
       <div className='lower'>
         <form onSubmit={(e) => e.preventDefault()}>
-          {type === "org" ? <OrganisationCreateForm userId={userId} /> :
-            type === "project" ? <ProjectCreateForm userId={userId} /> :
-              type === "team" ? <TeamCreateForm userId={userId} /> :
-                <TaskCreateForm userId={userId} />}
+          {type === "org" ? <OrganisationCreateForm setShow={setShow} setToastMsg={setToastMsg} /> :
+            type === "project" ? <ProjectCreateForm /> :
+              type === "team" ? <TeamCreateForm /> :
+                <TaskCreateForm />}
         </form>
       </div>
+      {/* <ToastComp toastMsg={toastMsg} show={show} setShow={setShow} /> */}
     </div>
   )
 }

@@ -10,7 +10,12 @@ const {
     updateUser,             // ["admin", "founder", "projectManager"]
     loginUser,              
     logoutUser,             
-    getLoggedInUserDetails  // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
+    getLoggedInUserDetails,  // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
+    getAllFounders,
+    getAllProjectManagers,
+    getAllTeamLeaders,
+    getAllTeamMembers
+    
 } = require('../../controllers/userController');
 
 const { isAuthenticatedUser, authorizedRoles } = require('../../middlewares/auth');
@@ -19,8 +24,8 @@ router.route('/register').post(isAuthenticatedUser, authorizedRoles("admin", "fo
 
 router.route('/login').post(loginUser);
 
-// router.route("/logout").post(isAuthenticatedUser, logoutUser);
-router.route("/logout").post(logoutUser);
+router.route("/logout").get(isAuthenticatedUser, logoutUser);
+// router.route("/logout").post(logoutUser);
 
 router.route("/me").get(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getLoggedInUserDetails);
 
@@ -31,5 +36,10 @@ router.route('/user/:id')
     .patch(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), updateUser);
 
 router.route('/user/:id').get(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getUserDetails);
+
+router.route('/allFounders').get(getAllFounders);
+router.route('/allProjectManagers').get(getAllProjectManagers);
+router.route('/allTeamLeaders').get(getAllTeamLeaders);
+router.route('/allTeamMembers').get(getAllTeamMembers);
 
 module.exports = router;

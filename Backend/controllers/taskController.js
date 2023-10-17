@@ -1,4 +1,4 @@
-const ErrorHandler = require('../middlewares/errorHandler');
+const ErrorHandler = require('../middlewares/error');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
 const TaskModel = require('../models/taskModel');

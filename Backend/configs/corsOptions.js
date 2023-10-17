@@ -9,6 +9,7 @@ const corsOptions = {
         }
     },
     credentials: true,
+    exposedHeaders: ['set-cookie'],
     optionsSuccessStatus: 200
 }
 

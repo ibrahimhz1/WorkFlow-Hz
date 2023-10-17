@@ -71,7 +71,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
 // LOGIN
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     const { email, password } = req.body;
-    
+
     if (!email, !password) {
         return next(new ErrorHandler("Please Enter Email and Password", 400));
     }
@@ -93,11 +93,12 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
 // LOGOUT
 exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
-    // res.cookie("token", null, {
-    //     expires: new Date(Date.now()),
-    //     httpOnly: true,
-    //     sameSite: 'None'
-    // });
+
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+        sameSite: 'None'
+    });
 
     res.status(200).json({
         success: true,
@@ -107,9 +108,56 @@ exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
 
 // Get LoggedIn User Details
 exports.getLoggedInUserDetails = catchAsyncErrors(async (req, res, next) => {
-    const user = await UserModel.findById(req.user) ;
+    const user = await UserModel.findById(req.user);
     res.status(200).json({
         success: true,
         user
     });
 });
+
+
+exports.getAllFounders = catchAsyncErrors(async (req, res, next) => {
+    console.log("inside the function");
+    const founders = await UserModel.find({role: "founder"});
+    if (!founders) {
+        return next(new ErrorHandler("No founders found", 401));
+    }
+    res.status(200).json({
+        success: true,
+        founders
+    })
+});
+
+exports.getAllProjectManagers = catchAsyncErrors(async (req, res, next) => {
+    console.log("inside the function");
+    const projectManagers = await UserModel.find({role: "projectManager"});
+    if (!projectManagers) {
+        return next(new ErrorHandler("No Project managers found", 401));
+    }
+    res.status(200).json({
+        success: true,
+        projectManagers
+    })
+});
+
+exports.getAllTeamLeaders = catchAsyncErrors(async (req, res, next) => {
+    const teamLeaders = await UserModel.find({role: "teamLeader"});
+    if (!teamLeaders) {
+        return next(new ErrorHandler("No teamLeaders found", 401));
+    }
+    res.status(200).json({
+        success: true,
+        teamLeaders
+    })
+});
+
+exports.getAllTeamMembers = catchAsyncErrors(async (req, res, next) => {
+    const teamMembers = await UserModel.find({role: "teamMember"});
+    if (!teamMembers) {
+        return next(new ErrorHandler("No teamMember found", 401));
+    }
+    res.status(200).json({
+        success: true,
+        teamMembers
+    })
+})

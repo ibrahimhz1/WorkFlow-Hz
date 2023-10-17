@@ -5,32 +5,28 @@ import { Link } from 'react-router-dom';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import Paper from '@mui/material/Paper';
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';import Accordion from '@mui/material/Accordion';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward'; import Accordion from '@mui/material/Accordion';
+
+import { useSelector } from 'react-redux'
 
 const OrgListComp = () => {
+  const orgs = useSelector((state) => state.org.orgs);
+
   return (
     <>
       <div className="rows">
         <h5>Your Organisation`s</h5>
         <div className="orgsDiv">
-
-          <Paper className="orgCard">
-            <h3>Datamoth</h3>
-            <KeyboardArrowRightIcon />
-          </Paper>
-
-          <Paper className="orgCard">
-            <h3>GenXtation</h3>
-            <KeyboardArrowRightIcon />
-          </Paper>
-
-          <Paper className="orgCard">
-            <h3>Xmonad</h3>
-            <KeyboardArrowRightIcon />
-          </Paper>
+          
+          {orgs.map((org) => (
+            <Paper className="orgCard" key={org._id}>
+              <h3>{org.name}</h3>
+              <KeyboardArrowRightIcon />
+            </Paper>
+          ))}
 
           <div>
-            <p> <Link className='linkStyle' to="/orgs">View All <ArrowOutwardIcon style={{fontSize: '1.3vmax'}} /> </Link> </p>
+            <p> <Link className='linkStyle' to="/orgs">View All <ArrowOutwardIcon style={{ fontSize: '1.3vmax' }} /> </Link> </p>
           </div>
         </div>
       </div>
@@ -39,6 +35,8 @@ const OrgListComp = () => {
 }
 
 const ProjectListComp = () => {
+  const projects = useSelector((state) => state.project.projects);
+
   return (
     <>
       <div className="rows">
@@ -60,9 +58,9 @@ const ProjectListComp = () => {
             <ViewInArIcon />
             <h4>Xmonad</h4>
           </Paper>
-          
+
           <div>
-            <p> <Link className='linkStyle' to="/orgs">View All  <ArrowOutwardIcon style={{fontSize: '1.3vmax'}} /> </Link> </p>
+            <p> <Link className='linkStyle' to="/orgs">View All  <ArrowOutwardIcon style={{ fontSize: '1.3vmax' }} /> </Link> </p>
           </div>
         </div>
       </div>
@@ -71,6 +69,7 @@ const ProjectListComp = () => {
 }
 
 const Homepage = () => {
+
   return (
     <div id='homepageMain'>
       <div className="headSection">

@@ -1,4 +1,4 @@
-const ErrorHandler = require('../middlewares/errorHandler');
+const ErrorHandler = require('../middlewares/error');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
 // Organisation Model Import
@@ -6,17 +6,23 @@ const OrgModel = require('../models/organisationModel');
 const ProjectModel = require('../models/projectModel');
 const TaskModel = require('../models/taskModel');
 const UserModel = require('../models/userModel');
+const AdminModel = require('../models/adminModel');
 
 exports.createOrg = catchAsyncErrors(async (req, res, next) => {
     const allowedRolesList = ["admin", "founder"];
     const { orgId, name, description, department } = req.body;
-    // const founderId = req.user;
-    const { founderId } = req.body;
+
+    const founderId = req.user;
+
     // check for the founderId in database
-    const founderDocumentId = await UserModel.find({ _id: founderId }, { _id: 1, role: 1 });
+    const founderDocumentId = await AdminModel.find({ _id: founderId }, { _id: 1, role: 1 });
+    if(!founderDocumentId.length){
+        founderDocumentId = await UserModel.find({ _id: founderId }, { _id: 1, role: 1 });
+    }
+
     if (allowedRolesList.includes(founderDocumentId[0].role)) {
-        // const org = await OrgModel.create({ orgId, name, description, department, founder: req.user._id });
-        const org = await OrgModel.create({ orgId, name, description, department, founder: founderId });
+        const org = await OrgModel.create({ orgId, name, description, department, founder: founderId._id });
+        console.log('created');
         if (!org) return res.status(400).json({ message: "No organisation created" });
         res.status(200).json({
             success: true,
@@ -29,7 +35,7 @@ exports.createOrg = catchAsyncErrors(async (req, res, next) => {
 
 exports.getOrgsOfFounder = catchAsyncErrors(async (req, res, next) => {
     const allowedRolesList = ["admin", "founder"];
-    const founderId = req.body;
+    const { founderId } = req.body;
     const orgs = await OrgModel.find({ founder: founderId });
     if (!orgs) return res.status(400).json({ message: "No organisation found for this founder" });
     res.status(200).json({

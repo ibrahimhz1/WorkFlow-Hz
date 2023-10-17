@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 // components
@@ -7,12 +7,12 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import EmailIcon from '@mui/icons-material/Email';
 
 // react redux
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // action creators
-import { loginUser } from "../../features/user/userSlice";
+import { loginAdmin } from "../../features/user/userSlice";
 
-const LoginPage = () => {
+const AdminLoginPage = () => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState();
@@ -20,7 +20,7 @@ const LoginPage = () => {
     const dispatch = useDispatch();
     
     const onSubmitHandler = async() => {
-        await dispatch(loginUser({ email: email, password: password }));
+        await dispatch(loginAdmin({ email: email, password: password }));
 
         if(JSON.parse(localStorage.getItem('user'))){
             navigate('/app');
@@ -75,4 +75,4 @@ const LoginPage = () => {
     )
 }
 
-export default LoginPage;
+export default AdminLoginPage;

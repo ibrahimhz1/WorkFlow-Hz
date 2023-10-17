@@ -1,5 +1,5 @@
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
-const ErrorHandler = require('../middlewares/errorHandler');
+const ErrorHandler = require('../middlewares/error');
 
 const TeamModel = require('../models/teamModel');
 

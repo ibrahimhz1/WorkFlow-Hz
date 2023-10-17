@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 const initialState = {
     loggedInUser: JSON.parse(localStorage.getItem('user')) || undefined,
@@ -42,7 +43,6 @@ export const registerAdmin = createAsyncThunk(
 export const loginUser = createAsyncThunk(
     'user/login',
     async ({ email, password }) => {
-        axios.defaults.withCredentials = true
         const response = await axios.post(`${BASE_URL}/login`, { email: email, password: password });
         if (response.data.user) {
             localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -75,11 +75,27 @@ export const registerUser = createAsyncThunk(
 export const logout = createAsyncThunk(
     'user/logout',
     async () => {
-        const response = await axios.post(`${BASE_URL}/logout`);
+        const response = await axios.get(`${BASE_URL}/logout`);
         if (response.data.success) {
             localStorage.removeItem("user");
             return true;
         }
+    }
+)
+
+export const getAllProjectManagers = createAsyncThunk(
+    'projectManagers/fetch',
+    async()=> {
+        const projectManagers = await axios.get(`${BASE_URL}/allProjectManagers`);
+        return projectManagers.data.projectManagers
+    }
+)
+
+export const getAllTeamMembers = createAsyncThunk(
+    'teamMembers/fetch',
+    async()=> {
+        const teamMembers = await axios.get(`${BASE_URL}/allTeamMembers`);
+        return teamMembers.data.teamMembers;
     }
 )
 
@@ -124,6 +140,12 @@ export const userSlice = createSlice({
             .addCase(logout.fulfilled, (state, action) => {
                 state.status = undefined,
                     state.loggedInUser = undefined
+            })
+            .addCase(getAllProjectManagers.fulfilled, (state, action)=> {
+                state.projectManagers = action.payload
+            })
+            .addCase(getAllTeamMembers.fulfilled, (state, action)=> {
+                state.teamMembers = action.payload
             })
     }
 });

@@ -13,16 +13,15 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
     }
 
     const decodedData = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log( "decoded data" , decodedData);
+
     req.user = await UserModel.findById(decodedData.id) || await AdminModel.findById(decodedData.id);
     // console.log(req.user);
     next();
 });
 
-exports.authorizedRoles = (...roles)=> {
-    return (req, res, next)=> {
-        // console.log("Role", req.user.role);
-        if(!roles.includes(req.user.role)){
+exports.authorizedRoles = (...roles) => {
+    return (req, res, next) => {
+        if (!roles.includes(req.user.role)) {
             return next(new ErrorHandler(`Role: ${req.user.role} is not allowed to access this resources`, 403));
         }
         next();

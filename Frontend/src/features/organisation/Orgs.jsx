@@ -6,4 +6,4 @@ const Orgs = () => {
   )
 }
 
-export default Orgs
+export default Orgs;
