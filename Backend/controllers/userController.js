@@ -117,7 +117,6 @@ exports.getLoggedInUserDetails = catchAsyncErrors(async (req, res, next) => {
 
 
 exports.getAllFounders = catchAsyncErrors(async (req, res, next) => {
-    console.log("inside the function");
     const founders = await UserModel.find({role: "founder"});
     if (!founders) {
         return next(new ErrorHandler("No founders found", 401));
@@ -129,7 +128,6 @@ exports.getAllFounders = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.getAllProjectManagers = catchAsyncErrors(async (req, res, next) => {
-    console.log("inside the function");
     const projectManagers = await UserModel.find({role: "projectManager"});
     if (!projectManagers) {
         return next(new ErrorHandler("No Project managers found", 401));

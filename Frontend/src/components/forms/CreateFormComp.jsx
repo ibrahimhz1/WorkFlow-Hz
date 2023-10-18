@@ -25,18 +25,6 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
 
 function getStyles(name, reporters, theme) {
   return {
@@ -119,7 +107,14 @@ const OrganisationCreateForm = ({ setShow, setToastMsg }) => {
 
 const ProjectCreateForm = () => {
   const theme = useTheme();
-  const [members, setMembers] = React.useState([]);
+
+  const [projectId, setProjectId] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [desc, setDesc] = useState('');
+  const [category, setCategory] = useState('');
+  const [projectLead, setProjectLead] = useState('');
+  const [members, setMembers] = useState([]);
+
   const projectManagers = useSelector((state) => state.user.projectManagers);
   const teamMembers = useSelector((state) => state.user.teamMembers);
 
@@ -160,11 +155,11 @@ const ProjectCreateForm = () => {
             <p>Project Members</p>
           </div>
           <div className='row2Right'>
-            <Form.Control type="text" placeholder="Project P-1" />
-            <Form.Control type="text" placeholder="Xmonad" />
-            <Form.Control type="text" placeholder="Description" />
-            <Form.Control type="text" placeholder="Category" />
-            <Form.Select size="sm">
+            <Form.Control type="text" placeholder="Project P-1" value={projectId} onChange={(e)=> setProjectId(e.target.value)} />
+            <Form.Control type="text" placeholder="Xmonad" value={projectName} onChange={(e)=> setProjectName(e.target.value)} />
+            <Form.Control type="text" placeholder="Description" value={desc} onChange={(e)=> setDesc(e.target.value)} />
+            <Form.Control type="text" placeholder="Category" value={category} onChange={(e)=> setCategory(e.target.value)} />
+            <Form.Select size="sm" value={projectLead} onChange={(e)=> setProjectLead(e.target.value)}>
               {
                 projectManagers.map((projMan) => (
                   <option key={projMan._id}>{projMan.name}</option>

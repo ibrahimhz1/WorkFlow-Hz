@@ -17,7 +17,7 @@ const OrgListComp = () => {
       <div className="rows">
         <h5>Your Organisation`s</h5>
         <div className="orgsDiv">
-          
+
           {orgs.map((org) => (
             <Paper className="orgCard" key={org._id}>
               <h3>{org.name}</h3>
@@ -69,11 +69,12 @@ const ProjectListComp = () => {
 }
 
 const Homepage = () => {
+  const founderName = useSelector((state) => state.user.loggedInUser.name);
 
   return (
     <div id='homepageMain'>
       <div className="headSection">
-        <h1>👋Hey Ibrahim'Hz</h1>
+        <h1>👋Hey {founderName}</h1>
         <p>Now you can access all your projects and tasks from one place</p>
         <hr />
       </div>
