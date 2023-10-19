@@ -11,18 +11,18 @@ const AdminModel = require('../models/adminModel');
 exports.createOrg = catchAsyncErrors(async (req, res, next) => {
     const allowedRolesList = ["admin", "founder"];
     const { orgId, name, description, department } = req.body;
+    
+    const founder = req.user;
+    const founderId = founder._id;
 
-    const founderId = req.user;
-
-    // check for the founderId in database
-    const founderDocumentId = await AdminModel.find({ _id: founderId }, { _id: 1, role: 1 });
-    if(!founderDocumentId.length){
+    let founderDocumentId = await AdminModel.find({ _id: founderId }, { _id: 1, role: 1 });
+    
+    if(founderDocumentId.length === 0){
         founderDocumentId = await UserModel.find({ _id: founderId }, { _id: 1, role: 1 });
     }
-
+    
     if (allowedRolesList.includes(founderDocumentId[0].role)) {
         const org = await OrgModel.create({ orgId, name, description, department, founder: founderId._id });
-        console.log('created');
         if (!org) return res.status(400).json({ message: "No organisation created" });
         res.status(200).json({
             success: true,

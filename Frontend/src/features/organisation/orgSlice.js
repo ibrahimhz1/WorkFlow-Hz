@@ -14,7 +14,6 @@ export const getOrgsOfFounder = createAsyncThunk(
     'org/founder',
     async ({ founderId }) => {
         const orgs = await axios.post(`${BASE_URL}/org/founder`, { founderId: founderId });
-        console.log(orgs.data);
         return orgs.data.orgs;
     }
 )
@@ -23,7 +22,6 @@ export const createOrg = createAsyncThunk(
     'org/create',
     async ({ orgId, orgName, desc, dept }) => {
         const newOrg = await axios.post(`${BASE_URL}/org`, { orgId, name: orgName, description: desc, department: dept });
-        // return (newOrg.data.success === true ? true : false);
         return newOrg.data.org;
     }
 )

@@ -91,6 +91,14 @@ export const getAllProjectManagers = createAsyncThunk(
     }
 )
 
+export const getAllTeamLeaders = createAsyncThunk(
+    'TeamLeaders/fetch',
+    async()=> {
+        const teamLeaders = await axios.get(`${BASE_URL}/allTeamLeaders`);
+        return teamLeaders.data.teamLeaders;
+    }
+)
+
 export const getAllTeamMembers = createAsyncThunk(
     'teamMembers/fetch',
     async()=> {
@@ -98,6 +106,7 @@ export const getAllTeamMembers = createAsyncThunk(
         return teamMembers.data.teamMembers;
     }
 )
+
 
 export const userSlice = createSlice({
     name: "user",
@@ -143,6 +152,9 @@ export const userSlice = createSlice({
             })
             .addCase(getAllProjectManagers.fulfilled, (state, action)=> {
                 state.projectManagers = action.payload
+            })
+            .addCase(getAllTeamLeaders.fulfilled, (state, action)=> {
+                state.teamLeaders = action.payload
             })
             .addCase(getAllTeamMembers.fulfilled, (state, action)=> {
                 state.teamMembers = action.payload

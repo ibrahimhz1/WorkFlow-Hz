@@ -35,7 +35,7 @@ const OrgListComp = () => {
 }
 
 const ProjectListComp = () => {
-  const projects = useSelector((state) => state.project.projects);
+  const allProjects = useSelector((state) => state.project.allProjects);
 
   return (
     <>
@@ -43,21 +43,12 @@ const ProjectListComp = () => {
         <h5>Your Projects</h5>
         <div className="projectDiv">
 
-          <Paper className="projectCard">
-            <ViewInArIcon />
-            <h4>Datamoth</h4>
-
-          </Paper>
-
-          <Paper className="projectCard">
-            <ViewInArIcon />
-            <h4>GenXtation</h4>
-          </Paper>
-
-          <Paper className="projectCard">
-            <ViewInArIcon />
-            <h4>Xmonad</h4>
-          </Paper>
+          {allProjects.map((proj) => (
+            <Paper className="projectCard" key={proj._id}>
+              <ViewInArIcon />
+              <h4>{proj.name}</h4>
+            </Paper>
+          ))}
 
           <div>
             <p> <Link className='linkStyle' to="/orgs">View All  <ArrowOutwardIcon style={{ fontSize: '1.3vmax' }} /> </Link> </p>

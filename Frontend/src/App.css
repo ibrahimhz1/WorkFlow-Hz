@@ -339,8 +339,13 @@ input:hover {
     justify-content: center;
     padding: 1vmax;
 }
+.createForm>.upper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-.createForm>.upper {
+.createForm>.upper>.left {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -369,7 +374,12 @@ input:hover {
     justify-content: center;
     flex-direction: column;
 }
-
+.org-create-form>.row1_5{
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    gap: 2vmax;
+}
 .org-create-form>.row2 {
     display: flex;
     align-items: start;
@@ -491,4 +501,16 @@ input:hover {
 }
 .linkStyle:hover{
     text-decoration: underline;
+}
+
+
+.addTeamMembersModal{
+    display: flex;
+    flex-direction: column;
+}
+.addTeamMembersModal>.head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.1vmax 0.5vmax;
 }

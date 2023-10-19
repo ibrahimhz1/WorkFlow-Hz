@@ -63,8 +63,6 @@ const OrganisationCreateForm = ({ setShow, setToastMsg }) => {
   const onSubmitHandler = async () => {
     const response = await dispatch(createOrg({ orgId, orgName, desc, dept }));
     if (response.payload) {
-      setShow(true);
-      setToastMsg(`${orgId} - ${orgName} created successfully`);
       setOrgId('');
       setOrgName('');
       setDesc('');
@@ -104,34 +102,27 @@ const OrganisationCreateForm = ({ setShow, setToastMsg }) => {
   );
 }
 
-
+import { createProject } from "../../features/project/projectSlice";
 const ProjectCreateForm = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
-
+  const [org, setOrg] = useState({ id: " ", name: " " });
   const [projectId, setProjectId] = useState('');
   const [projectName, setProjectName] = useState('');
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('');
-  const [projectLead, setProjectLead] = useState('');
-  const [members, setMembers] = useState([]);
+  const [projectLead, setProjectLead] = useState({ id: " ", name: " " });
+  const [selected, setSelected] = React.useState(useSelector((state) => state.project.addTeamMembers));
 
+  // modal for team members functions
+  // redux states
+  const orgs = useSelector((state) => state.org.orgs);
   const projectManagers = useSelector((state) => state.user.projectManagers);
-  const teamMembers = useSelector((state) => state.user.teamMembers);
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setMembers(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-
-  const onSubmitHandler = () => {
-
+  const onSubmitHandler = async () => {
+    const converted = selected.map(item => ({ _id: item }));
+    await dispatch(createProject({ org, projectId, projectName, desc, category, projectLead, members: converted }));
   }
-
 
   return (
     <>
@@ -145,6 +136,24 @@ const ProjectCreateForm = () => {
           />
           <span>Project Image</span>
         </div>
+        <div className="row1_5">
+          <div className='row1_Left'>
+            <span>Organisation</span>
+          </div>
+          <div className='row1_Right'>
+            <Form.Select size="sm" value={org.name} onChange={(e) => {
+              const org = JSON.parse(e.target.value);
+              setOrg({ id: org.id, name: org.name })
+            }}>
+              <option value={org.id}>{org.name}</option>
+              {
+                orgs.map((org) => (
+                  <option value={JSON.stringify({ id: org._id, name: org.name })} key={org._id}>{org.name}</option>
+                ))
+              }
+            </Form.Select>
+          </div>
+        </div>
         <div className="row2">
           <div className='row2Left'>
             <p>Project ID</p>
@@ -155,59 +164,22 @@ const ProjectCreateForm = () => {
             <p>Project Members</p>
           </div>
           <div className='row2Right'>
-            <Form.Control type="text" placeholder="Project P-1" value={projectId} onChange={(e)=> setProjectId(e.target.value)} />
-            <Form.Control type="text" placeholder="Xmonad" value={projectName} onChange={(e)=> setProjectName(e.target.value)} />
-            <Form.Control type="text" placeholder="Description" value={desc} onChange={(e)=> setDesc(e.target.value)} />
-            <Form.Control type="text" placeholder="Category" value={category} onChange={(e)=> setCategory(e.target.value)} />
-            <Form.Select size="sm" value={projectLead} onChange={(e)=> setProjectLead(e.target.value)}>
+            <Form.Control type="text" placeholder="Project P-1" value={projectId} onChange={(e) => setProjectId(e.target.value)} />
+            <Form.Control type="text" placeholder="Xmonad" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
+            <Form.Control type="text" placeholder="Description" value={desc} onChange={(e) => setDesc(e.target.value)} />
+            <Form.Control type="text" placeholder="Category" value={category} onChange={(e) => setCategory(e.target.value)} />
+            <Form.Select size="sm" value={projectLead.name} onChange={(e) => {
+              const projMan = JSON.parse(e.target.value);
+              setProjectLead({ id: projMan.id, name: projMan.name })
+            }}>
+              <option value={projectLead.id}>{projectLead.name}</option>
               {
                 projectManagers.map((projMan) => (
-                  <option key={projMan._id}>{projMan.name}</option>
+                  <option value={JSON.stringify({ id: projMan._id, name: projMan.name })} key={projMan._id}>{projMan.name}</option>
                 ))
               }
-
             </Form.Select>
-            <Select
-              sx={{
-                color: "white",
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '.MuiSvgIcon-root ': {
-                  fill: "white !important",
-                }
-              }}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={members}
-              onChange={handleChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} style={{ color: "white", backgroundColor: "#999999" }} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {teamMembers.map((member) => (
-                <MenuItem
-                  key={member._id}
-                  value={member.name}
-                  style={getStyles(name, members, theme)}
-                >
-                  {member.name}
-                </MenuItem>
-              ))}
-            </Select>
+            <AddTeamMembers selected={selected} setSelected={setSelected} />
           </div>
         </div>
       </div>
@@ -576,29 +548,30 @@ const TaskCreateForm = ({ classes }) => {
   );
 }
 
-
-import ToastComp from '../toast/ToastComp';
-const CreateFormComp = () => {
+import AddTeamMembers from '../modals/addTeamMembers';
+const CreateFormComp = ({ handleClose }) => {
   const [type, setType] = useState('org');
-  const [show, setShow] = useState(null);
-  const [toastMsg, setToastMsg] = useState('');
 
   return (
     <div className='createForm'>
       <div className='upper'>
-        <span>SELECT TYPE</span>
-        <ToggleMode type={type} setType={setType} />
+        <div className='left'>
+          <span>SELECT TYPE</span>
+          <ToggleMode type={type} setType={setType} />
+        </div>
+        <div className="right">
+          <Button onClick={handleClose}>Close</Button>
+        </div>
       </div>
       <hr />
       <div className='lower'>
         <form onSubmit={(e) => e.preventDefault()}>
-          {type === "org" ? <OrganisationCreateForm setShow={setShow} setToastMsg={setToastMsg} /> :
+          {type === "org" ? <OrganisationCreateForm /> :
             type === "project" ? <ProjectCreateForm /> :
               type === "team" ? <TeamCreateForm /> :
                 <TaskCreateForm />}
         </form>
       </div>
-      {/* <ToastComp toastMsg={toastMsg} show={show} setShow={setShow} /> */}
     </div>
   )
 }

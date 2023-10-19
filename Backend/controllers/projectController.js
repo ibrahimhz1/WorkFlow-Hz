@@ -8,6 +8,7 @@ const UserModel = require('../models/userModel');
 
 exports.createProject = catchAsyncErrors(async (req, res, next) => {
     const { orgId, projectId, name, description, category, projectLead, members } = req.body;
+    console.log("inside");
     const project = await ProjectModel.create({
         orgId,
         projectId,
@@ -52,7 +53,9 @@ exports.getAllProjects = catchAsyncErrors(async (req, res, next) => {
 
 exports.getProjectsOfUser = catchAsyncErrors(async (req, res, next) => {
     const { userId } = req.body;
+    
     const projects = await ProjectModel.find({ 'projectLead': { $eq: userId } });
+    
     if (!projects || !projects.length) return res.status(400).json({ message: "this user has no projects" })
     res.status(200).json({
         success: true,

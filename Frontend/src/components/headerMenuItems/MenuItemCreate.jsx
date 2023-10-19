@@ -8,10 +8,10 @@ import Modal from '@mui/material/Modal';
 import CreateFormComp from '../forms/CreateFormComp'
 
 const style = {
-    width: "80%",
-    height: "80%",
-    ml: "10%",
-    mt: "5%",
+    width: "100%",
+    height: "100%",
+    // ml: "8%",
+    // mt: "5%",
     bgcolor: "#101418",
     outline: "none",
     border: "1px dotted gray",
@@ -23,7 +23,6 @@ const style = {
 // react redux 
 import { useSelector, useDispatch } from 'react-redux';
 
-   
 const MenuItemCreate = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -42,7 +41,7 @@ const MenuItemCreate = () => {
                     sx={style}
                     style={{ overflowY: 'scroll' }}
                 >
-                    <CreateFormComp />
+                    <CreateFormComp handleClose={handleClose} />
                 </Box>
             </Modal>
         </>

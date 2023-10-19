@@ -7,8 +7,8 @@ import AppHeader from '../AppHeader';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getOrgsOfFounder } from '../../features/organisation/orgSlice'
-import { getAllProjectsOfUser } from "../../features/project/projectSlice";
-import { getAllProjectManagers, getAllTeamMembers } from '../../features/user/userSlice';
+import { getAllProjects } from "../../features/project/projectSlice";
+import { getAllProjectManagers, getAllTeamMembers, getAllTeamLeaders } from '../../features/user/userSlice';
 
 const AppLayout = () => {
   const dispatch = useDispatch();
@@ -16,8 +16,9 @@ const AppLayout = () => {
 
   useEffect(() => {
     dispatch(getOrgsOfFounder({ founderId }));
-    dispatch(getAllProjectsOfUser({ founderId }));
+    dispatch(getAllProjects());
     dispatch(getAllProjectManagers());
+    dispatch(getAllTeamLeaders());
     dispatch(getAllTeamMembers());
   }, [])
 
