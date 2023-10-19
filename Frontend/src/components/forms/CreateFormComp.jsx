@@ -102,7 +102,7 @@ const OrganisationCreateForm = ({ setShow, setToastMsg }) => {
   );
 }
 
-import { createProject } from "../../features/project/projectSlice";
+import { createProject, getAllProjects } from "../../features/project/projectSlice";
 const ProjectCreateForm = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -122,6 +122,7 @@ const ProjectCreateForm = () => {
   const onSubmitHandler = async () => {
     const converted = selected.map(item => ({ _id: item }));
     await dispatch(createProject({ org, projectId, projectName, desc, category, projectLead, members: converted }));
+    dispatch(getAllProjects())
   }
 
   return (

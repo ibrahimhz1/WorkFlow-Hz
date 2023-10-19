@@ -60,7 +60,7 @@ const ProjectListComp = () => {
 }
 
 const Homepage = () => {
-  const founderName = useSelector((state) => state.user.loggedInUser.name);
+  const founderName = JSON.parse(localStorage.getItem('user')).name;
 
   return (
     <div id='homepageMain'>

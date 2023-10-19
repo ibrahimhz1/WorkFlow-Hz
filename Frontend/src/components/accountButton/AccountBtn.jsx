@@ -32,6 +32,7 @@ const AccountBtn = () => {
         if(response.payload){
             navigate('/login');
             handleClose();
+            localStorage.removeItem('user');
         }
     }
 

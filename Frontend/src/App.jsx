@@ -22,7 +22,7 @@ import SetupPage from "./components/Pages/SetupPage";
 
 const App = () => {
 
-  const isLoggedIn = JSON.parse(localStorage.getItem('user'));
+  const isLoggedIn = JSON.parse(localStorage.getItem('user')) ? true : false;
 
   return (
     <Routes>

@@ -12,7 +12,8 @@ import { getAllProjectManagers, getAllTeamMembers, getAllTeamLeaders } from '../
 
 const AppLayout = () => {
   const dispatch = useDispatch();
-  const founderId = useSelector((state) => state.user.loggedInUser._id) || " ";
+  
+  const founderId = JSON.parse(localStorage.getItem('user'))._id;
 
   useEffect(() => {
     dispatch(getOrgsOfFounder({ founderId }));

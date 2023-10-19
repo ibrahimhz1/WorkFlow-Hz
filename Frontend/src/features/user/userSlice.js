@@ -77,7 +77,7 @@ export const logout = createAsyncThunk(
     async () => {
         const response = await axios.get(`${BASE_URL}/logout`);
         if (response.data.success) {
-            localStorage.removeItem("user");
+            // localStorage.removeItem("user");
             return true;
         }
     }
@@ -85,7 +85,7 @@ export const logout = createAsyncThunk(
 
 export const getAllProjectManagers = createAsyncThunk(
     'projectManagers/fetch',
-    async()=> {
+    async () => {
         const projectManagers = await axios.get(`${BASE_URL}/allProjectManagers`);
         return projectManagers.data.projectManagers
     }
@@ -93,7 +93,7 @@ export const getAllProjectManagers = createAsyncThunk(
 
 export const getAllTeamLeaders = createAsyncThunk(
     'TeamLeaders/fetch',
-    async()=> {
+    async () => {
         const teamLeaders = await axios.get(`${BASE_URL}/allTeamLeaders`);
         return teamLeaders.data.teamLeaders;
     }
@@ -101,7 +101,7 @@ export const getAllTeamLeaders = createAsyncThunk(
 
 export const getAllTeamMembers = createAsyncThunk(
     'teamMembers/fetch',
-    async()=> {
+    async () => {
         const teamMembers = await axios.get(`${BASE_URL}/allTeamMembers`);
         return teamMembers.data.teamMembers;
     }
@@ -147,16 +147,16 @@ export const userSlice = createSlice({
                 state.status = 'idle'
             })
             .addCase(logout.fulfilled, (state, action) => {
-                state.status = undefined,
-                    state.loggedInUser = undefined
+                state.status = 'idle';
+                state.loggedInUser = '';
             })
-            .addCase(getAllProjectManagers.fulfilled, (state, action)=> {
+            .addCase(getAllProjectManagers.fulfilled, (state, action) => {
                 state.projectManagers = action.payload
             })
-            .addCase(getAllTeamLeaders.fulfilled, (state, action)=> {
+            .addCase(getAllTeamLeaders.fulfilled, (state, action) => {
                 state.teamLeaders = action.payload
             })
-            .addCase(getAllTeamMembers.fulfilled, (state, action)=> {
+            .addCase(getAllTeamMembers.fulfilled, (state, action) => {
                 state.teamMembers = action.payload
             })
     }
