@@ -159,5 +159,12 @@ exports.updateMembersOfProject = catchAsyncErrors(async (req, res, next) => {
 // Get All Projects of Organisation
 exports.getProjectsOfOrg = catchAsyncErrors(async (req, res, next) => {
     const { orgId } = req.body;
-
-})
+    const projects = await ProjectModel.find({orgId: orgId});
+    if(!projects){
+        return next(new ErrorHandler("No Projects found in this org", 401));
+    }
+    res.status(200).json({
+        success: true,
+        projects
+    })
+});

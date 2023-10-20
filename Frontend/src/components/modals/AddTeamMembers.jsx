@@ -388,7 +388,8 @@ const style = {
     borderRadius: "0.5vmax",
     color: "white",
 };
-
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Groups2Icon from '@mui/icons-material/Groups2';
 const AddTeamMembers = ({ selected, setSelected }) => {
     const dispatch = useDispatch();
     const addTeamMembersList = useSelector((state) => state.project.addTeamMembers);
@@ -401,8 +402,10 @@ const AddTeamMembers = ({ selected, setSelected }) => {
 
     return (
         <>
-            <Button onClick={handleOpen}>{addTeamMembersList.length === 0 ? "Add" : "Edit"} Members</Button>
-            {addTeamMembersList.length} Members
+            <Button onClick={handleOpen}> <GroupAddIcon /> {addTeamMembersList.length === 0 ? "Add" : "Edit"} Members</Button>
+            <div>
+                <Groups2Icon /> {addTeamMembersList.length} Members
+            </div>
             <Modal
                 open={open}
                 onClose={handleClose}

@@ -53,7 +53,7 @@ const ToggleMode = ({ type, setType }) => {
 
 import { createOrg } from '../../features/organisation/orgSlice';
 
-const OrganisationCreateForm = ({ setShow, setToastMsg }) => {
+const OrganisationCreateForm = () => {
   const [orgId, setOrgId] = useState('');
   const [orgName, setOrgName] = useState('');
   const [desc, setDesc] = useState('');
@@ -112,7 +112,7 @@ const ProjectCreateForm = () => {
   const [desc, setDesc] = useState('');
   const [category, setCategory] = useState('');
   const [projectLead, setProjectLead] = useState({ id: " ", name: " " });
-  const [selected, setSelected] = React.useState(useSelector((state) => state.project.addTeamMembers));
+  // const [selected, setSelected] = React.useState(useSelector((state) => state.project.addTeamMembers));
 
   // modal for team members functions
   // redux states
@@ -120,9 +120,18 @@ const ProjectCreateForm = () => {
   const projectManagers = useSelector((state) => state.user.projectManagers);
 
   const onSubmitHandler = async () => {
-    const converted = selected.map(item => ({ _id: item }));
-    await dispatch(createProject({ org, projectId, projectName, desc, category, projectLead, members: converted }));
-    dispatch(getAllProjects())
+    // const converted = selected.map(item => ({ _id: item }));
+    // await dispatch(createProject({ org, projectId, projectName, desc, category, projectLead, members: converted }));
+    const response = await dispatch(createProject({ org, projectId, projectName, desc, category, projectLead }));
+    if (response.payload.success) {
+      setOrg({ id: " ", name: " " });
+      setProjectId('');
+      setProjectName('');
+      setDesc('');
+      setCategory('');
+      setProjectLead({ id: " ", name: " " });
+    }
+    dispatch(getAllProjects());
   }
 
   return (
@@ -162,7 +171,7 @@ const ProjectCreateForm = () => {
             <p>Project Description</p>
             <p>Project Category</p>
             <p>Project Lead</p>
-            <p>Project Members</p>
+            {/* <p>Project Members</p> */}
           </div>
           <div className='row2Right'>
             <Form.Control type="text" placeholder="Project P-1" value={projectId} onChange={(e) => setProjectId(e.target.value)} />
@@ -180,7 +189,7 @@ const ProjectCreateForm = () => {
                 ))
               }
             </Form.Select>
-            <AddTeamMembers selected={selected} setSelected={setSelected} />
+            {/* <AddTeamMembers selected={selected} setSelected={setSelected} /> */}
           </div>
         </div>
       </div>
@@ -189,22 +198,37 @@ const ProjectCreateForm = () => {
   );
 }
 
+import { createTeam } from '../../features/team/teamSlice';
+import {getProjectsOfOrg} from '../../features/project/projectSlice';
+
 const TeamCreateForm = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
-  const [members, setMembers] = useState([]);
+  const [teamName, setTeamName] = useState('');
+  const [teamId, setTeamId] = useState('');
+  const [desc, setDesc] = useState('');
+  const [teamLeader, setTeamLeader] = useState({ id: '', name: '' });
+  const [org, setOrg] = useState({ id: '', name: '' });
+  const [project, setProject] = useState({ id: 'id', name: 'select' });
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setMembers(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+  const orgs = useSelector((state) => state.org.orgs);
+  const projects = useSelector((state) => state.project.projectsOfOrg);
+  const teamLeads = useSelector((state) => state.user.teamLeaders);
+  const [selected, setSelected] = useState(useSelector((state) => state.project.addTeamMembers));
 
-  const onSubmitHandler = () => {
+  const onSubmitHandler = async() => {
+    const converted = selected.map(item => ({ _id: item }));
+    const response = await dispatch(createTeam({ orgId: org.id, projectId: project.id, teamId, teamName, teamLeader: teamLeader.id, members: converted, desc }));
 
+    if(response.payload.success){
+      setTeamName('');
+      setTeamId('');
+      setDesc('');
+      setTeamLeader({ id: '', name: '' });
+      setOrg({id: '', name: ''});
+      setProject({id: 'id', name: 'select'});
+      setSelected([]);
+    }
   }
 
   return (
@@ -221,6 +245,8 @@ const TeamCreateForm = () => {
         </div>
         <div className="row2">
           <div className='row2Left'>
+            <p>Organisation</p>
+            <p>Project</p>
             <p>Team ID</p>
             <p>Team Name</p>
             <p>Team Description</p>
@@ -228,53 +254,46 @@ const TeamCreateForm = () => {
             <p>Team Members</p>
           </div>
           <div className='row2Right'>
-            <Form.Control type="text" placeholder="Team TM-1" />
-            <Form.Control type="text" placeholder="Zenconf" />
-            <Form.Control type="text" placeholder="Description" />
-            <Form.Select size="sm">
-              <option>Dank Dev</option>
+            <Form.Select size="sm" value={org.name} onChange={(e) => {
+              setProject({id: 'id', name: 'select'})
+              const org = JSON.parse(e.target.value);
+              setOrg({ id: org.id, name: org.name })
+              dispatch(getProjectsOfOrg({orgId: org.id}));
+            }}>
+              <option value={org.id}>{org.name}</option>
+              {
+                orgs.map((org) => (
+                  <option value={JSON.stringify({ id: org._id, name: org.name })} key={org._id}>{org.name}</option>
+                ))
+              }
             </Form.Select>
-            <Select
-              sx={{
-                color: "white",
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '.MuiSvgIcon-root ': {
-                  fill: "white !important",
-                }
-              }}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={members}
-              onChange={handleChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} style={{ color: "white", backgroundColor: "#999999" }} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, members, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
+            <Form.Select size="sm" value={project.name} onChange={(e) => {
+              const project = JSON.parse(e.target.value);
+              setProject({ id: project.id, name: project.name });
+
+            }}>
+              <option value={project.id}>{project.name}</option>
+              {
+                projects.map((project) => (
+                  <option value={JSON.stringify({ id: project._id, name: project.name })} key={project._id}>{project.name}</option>
+                ))
+              }
+            </Form.Select>
+            <Form.Control type="text" placeholder="Team TM-1" value={teamId} onChange={(e)=> setTeamId(e.target.value)} />
+            <Form.Control type="text" placeholder="Zenconf" value={teamName} onChange={(e)=> setTeamName(e.target.value)} />
+            <Form.Control type="text" placeholder="Description" value={desc} onChange={(e)=> setDesc(e.target.value)} />
+            <Form.Select size="sm" value={teamLeader.name} onChange={(e) => {
+              const lead = JSON.parse(e.target.value);
+              setTeamLeader({ id: lead.id, name: lead.name })
+            }}>
+              <option value={teamLeader.id}>{teamLeader.name}</option>
+              {
+                teamLeads.map((lead) => (
+                  <option value={JSON.stringify({ id: lead._id, name: lead.name })} key={lead._id}>{lead.name}</option>
+                ))
+              }
+            </Form.Select>
+            <AddTeamMembers selected={selected} setSelected={setSelected} />
           </div>
         </div>
       </div>
@@ -283,7 +302,7 @@ const TeamCreateForm = () => {
   );
 }
 
-const TaskCreateForm = ({ classes }) => {
+const TaskCreateForm = () => {
   const theme = useTheme();
   const [reporters, setReporters] = useState([]);
   const [subReporters, setSubReporters] = useState([]);
@@ -358,7 +377,7 @@ const TaskCreateForm = ({ classes }) => {
             <Form.Select size="sm">
               <option>Ibrahim Hz</option>
             </Form.Select>
-            <Select
+            {/* <Select
               sx={{
                 color: "white",
                 '.MuiOutlinedInput-notchedOutline': {
@@ -439,7 +458,7 @@ const TaskCreateForm = ({ classes }) => {
                   {name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
           </div>
 
           <div className='row2LeftMost'>
@@ -457,7 +476,7 @@ const TaskCreateForm = ({ classes }) => {
             <Form.Select size="sm">
               <option>Ibrahim Hz</option>
             </Form.Select>
-            <Select
+            {/* <Select
               sx={{
                 color: "white",
                 '.MuiOutlinedInput-notchedOutline': {
@@ -539,7 +558,7 @@ const TaskCreateForm = ({ classes }) => {
                   {name}
                 </MenuItem>
               ))}
-            </Select>
+            </Select> */}
 
           </div>
         </div>

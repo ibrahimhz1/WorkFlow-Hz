@@ -29,7 +29,6 @@ const App = () => {
 
       {/* General Layout Routing -> register, login, blog, docs etc... <> After Login or Register Redirect to /app */}
       <Route path='/' element={<Layout />}>
-        <Route index element={<Homepage />} />
         <Route path="/registerApp" element={isLoggedIn ? <Navigate to="/app" /> : <RegisterPage />} />
         <Route path="/login" element={isLoggedIn ? <Navigate to="/app" /> : <LoginPage />} />
         <Route path="/admin/login" element={isLoggedIn ? <Navigate to="/app" /> : <AdminLoginPage />} />

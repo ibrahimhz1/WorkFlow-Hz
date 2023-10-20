@@ -30,14 +30,17 @@ const teamSchema = new mongoose.Schema({
 		type: String,
 	},
 	teamLeader: {
-		type: String,
+		type: mongoose.Schema.ObjectId,
+		ref: "User",
 		required: true
 	},
 	members: [
 		{
-			type: mongoose.Schema.ObjectId,
-			ref: "User",
-			required: true
+			_id: {
+				type: mongoose.Schema.ObjectId,
+				ref: "User",
+				required: true
+			}
 		}
 	],
 	createdAt: {
