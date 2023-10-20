@@ -134,7 +134,7 @@ const MembersRoleAndInfo = () => {
   );
 }
 
-const CreateUserComp = () => {
+export const CreateUserComp = () => {
   const [userId, setUserId] = useState('');
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
@@ -145,8 +145,7 @@ const CreateUserComp = () => {
 
   return (
     <div className='createUserComp'>
-
-      <form className='usercreateForm' onSubmit={(e)=> e.preventDefault()}>
+      <div className='usercreateForm'>
         <div className="left">
           <Avatar
             alt="razorPay"
@@ -196,7 +195,7 @@ const CreateUserComp = () => {
             <SubmitBtn text={"Create"} />
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

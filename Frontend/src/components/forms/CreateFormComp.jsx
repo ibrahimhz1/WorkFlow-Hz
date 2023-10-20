@@ -44,6 +44,7 @@ const ToggleMode = ({ type, setType }) => {
           <Button variant="outline-primary" value={"project"} onClick={(e) => setType(e.target.value)} active={type === "project" ? true : false}>Project</Button>
           <Button variant="outline-primary" value={"team"} onClick={(e) => setType(e.target.value)} active={type === "team" ? true : false}>Team</Button>
           <Button variant="outline-primary" value={"task"} onClick={(e) => setType(e.target.value)} active={type === "task" ? true : false}>Task</Button>
+          <Button variant="outline-primary" value={"user"} onClick={(e) => setType(e.target.value)} active={type === "user" ? true : false}>User</Button>
         </ButtonGroup>
       </div>
     </div>
@@ -199,7 +200,7 @@ const ProjectCreateForm = () => {
 }
 
 import { createTeam } from '../../features/team/teamSlice';
-import {getProjectsOfOrg} from '../../features/project/projectSlice';
+import { getProjectsOfOrg } from '../../features/project/projectSlice';
 
 const TeamCreateForm = () => {
   const dispatch = useDispatch();
@@ -216,17 +217,17 @@ const TeamCreateForm = () => {
   const teamLeads = useSelector((state) => state.user.teamLeaders);
   const [selected, setSelected] = useState(useSelector((state) => state.project.addTeamMembers));
 
-  const onSubmitHandler = async() => {
+  const onSubmitHandler = async () => {
     const converted = selected.map(item => ({ _id: item }));
     const response = await dispatch(createTeam({ orgId: org.id, projectId: project.id, teamId, teamName, teamLeader: teamLeader.id, members: converted, desc }));
 
-    if(response.payload.success){
+    if (response.payload.success) {
       setTeamName('');
       setTeamId('');
       setDesc('');
       setTeamLeader({ id: '', name: '' });
-      setOrg({id: '', name: ''});
-      setProject({id: 'id', name: 'select'});
+      setOrg({ id: '', name: '' });
+      setProject({ id: 'id', name: 'select' });
       setSelected([]);
     }
   }
@@ -255,10 +256,10 @@ const TeamCreateForm = () => {
           </div>
           <div className='row2Right'>
             <Form.Select size="sm" value={org.name} onChange={(e) => {
-              setProject({id: 'id', name: 'select'})
+              setProject({ id: 'id', name: 'select' })
               const org = JSON.parse(e.target.value);
               setOrg({ id: org.id, name: org.name })
-              dispatch(getProjectsOfOrg({orgId: org.id}));
+              dispatch(getProjectsOfOrg({ orgId: org.id }));
             }}>
               <option value={org.id}>{org.name}</option>
               {
@@ -279,9 +280,9 @@ const TeamCreateForm = () => {
                 ))
               }
             </Form.Select>
-            <Form.Control type="text" placeholder="Team TM-1" value={teamId} onChange={(e)=> setTeamId(e.target.value)} />
-            <Form.Control type="text" placeholder="Zenconf" value={teamName} onChange={(e)=> setTeamName(e.target.value)} />
-            <Form.Control type="text" placeholder="Description" value={desc} onChange={(e)=> setDesc(e.target.value)} />
+            <Form.Control type="text" placeholder="Team TM-1" value={teamId} onChange={(e) => setTeamId(e.target.value)} />
+            <Form.Control type="text" placeholder="Zenconf" value={teamName} onChange={(e) => setTeamName(e.target.value)} />
+            <Form.Control type="text" placeholder="Description" value={desc} onChange={(e) => setDesc(e.target.value)} />
             <Form.Select size="sm" value={teamLeader.name} onChange={(e) => {
               const lead = JSON.parse(e.target.value);
               setTeamLeader({ id: lead.id, name: lead.name })
@@ -568,6 +569,15 @@ const TaskCreateForm = () => {
   );
 }
 
+
+import { CreateUserComp } from '../headerMenuItems/MenuItemUsers';
+const UserCreateForm = ()=> {
+  
+  return (
+    <CreateUserComp />
+  );
+}
+
 import AddTeamMembers from '../modals/addTeamMembers';
 const CreateFormComp = ({ handleClose }) => {
   const [type, setType] = useState('org');
@@ -589,7 +599,8 @@ const CreateFormComp = ({ handleClose }) => {
           {type === "org" ? <OrganisationCreateForm /> :
             type === "project" ? <ProjectCreateForm /> :
               type === "team" ? <TeamCreateForm /> :
-                <TaskCreateForm />}
+                type === "task" ? <TaskCreateForm /> :
+                  type === "user" ? <UserCreateForm /> : ''}
         </form>
       </div>
     </div>

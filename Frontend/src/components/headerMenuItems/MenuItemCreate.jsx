@@ -21,8 +21,6 @@ const style = {
 
 
 // react redux 
-import { useSelector, useDispatch } from 'react-redux';
-
 const MenuItemCreate = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
