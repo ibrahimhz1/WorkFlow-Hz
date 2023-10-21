@@ -39,6 +39,7 @@ export const getProjectsOfOrg = createAsyncThunk(
     'projectsOfOrg/fetch',
     async ({ orgId }) => {
         const projects = await axios.post(`${BASE_URL}/org/projects`, { orgId: orgId });
+        console.log(projects);
         return projects.data.projects;
     }
 )

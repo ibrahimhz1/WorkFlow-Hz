@@ -107,6 +107,13 @@ export const getAllTeamMembers = createAsyncThunk(
     }
 )
 
+export const createUser = createAsyncThunk(
+    'user/create',
+    async({userId, username, name, email, password, avatar, role})=> {
+        const user = await axios.post(`${BASE_URL}/register`, {userId, username, name, email, password, avatar, role});
+        return user.data.success;
+    }
+)
 
 export const userSlice = createSlice({
     name: "user",

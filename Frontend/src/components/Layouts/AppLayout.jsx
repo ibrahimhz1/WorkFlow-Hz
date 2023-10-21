@@ -17,7 +17,6 @@ const AppLayout = () => {
 
   useEffect(() => {
     dispatch(getOrgsOfFounder({ founderId }));
-    dispatch(getAllProjects());
     dispatch(getAllProjectManagers());
     dispatch(getAllTeamLeaders());
     dispatch(getAllTeamMembers());

@@ -3,9 +3,11 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
 // Employee Model Import
 const UserModel = require('../models/userModel');
+const ProjectModel = require('../models/projectModel');
 
 // JWT Send Token
 const sendToken = require('../utils/jwtToken');
+const { ObjectId } = require('mongodb');
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     const { userId, username, name, email, password, avatar, role } = req.body;
@@ -115,9 +117,27 @@ exports.getLoggedInUserDetails = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+// GET All Project Managers of Organisation
+exports.getProjectManagersOfOrg = catchAsyncErrors(async (req, res, next) => {
+    const { orgId } = req.body;
+    let projectMans = await ProjectModel.find({ orgId: orgId }, { projectLead: 1, _id: 0 });
+    projectMans = projectMans.map(man => man.projectLead);
+    console.log(projectMans);
 
+    if (!projectMans.length) return next(new ErrorHandler("No project managers found", 401));
+    projectMans = await UserModel.find({ _id: { $in: projectMans } });
+
+    res.status(200).json({
+        success: true,
+        projectMans
+    });
+});
+
+// GET All Team Leaders of Organisation
+
+// GET All Team Members of Organisation
 exports.getAllFounders = catchAsyncErrors(async (req, res, next) => {
-    const founders = await UserModel.find({role: "founder"});
+    const founders = await UserModel.find({ role: "founder" });
     if (!founders) {
         return next(new ErrorHandler("No founders found", 401));
     }
@@ -128,7 +148,7 @@ exports.getAllFounders = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.getAllProjectManagers = catchAsyncErrors(async (req, res, next) => {
-    const projectManagers = await UserModel.find({role: "projectManager"});
+    const projectManagers = await UserModel.find({ role: "projectManager" });
     if (!projectManagers) {
         return next(new ErrorHandler("No Project managers found", 401));
     }
@@ -139,7 +159,7 @@ exports.getAllProjectManagers = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.getAllTeamLeaders = catchAsyncErrors(async (req, res, next) => {
-    const teamLeaders = await UserModel.find({role: "teamLeader"});
+    const teamLeaders = await UserModel.find({ role: "teamLeader" });
     if (!teamLeaders) {
         return next(new ErrorHandler("No teamLeaders found", 401));
     }
@@ -150,7 +170,7 @@ exports.getAllTeamLeaders = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.getAllTeamMembers = catchAsyncErrors(async (req, res, next) => {
-    const teamMembers = await UserModel.find({role: "teamMember"});
+    const teamMembers = await UserModel.find({ role: "teamMember" });
     if (!teamMembers) {
         return next(new ErrorHandler("No teamMember found", 401));
     }

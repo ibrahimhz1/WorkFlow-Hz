@@ -16,6 +16,8 @@ import Avatar from '@mui/material/Avatar';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -134,14 +136,37 @@ const MembersRoleAndInfo = () => {
   );
 }
 
+
+import { createUser, getAllProjectManagers, getAllTeamLeaders, getAllTeamMembers } from '../../features/user/userSlice';
+import { useDispatch } from 'react-redux';
 export const CreateUserComp = () => {
+  const dispatch = useDispatch();
   const [userId, setUserId] = useState('');
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [avatar, setAvatar] = useState('');
+  const [avatar, setAvatar] = useState({
+    public_id: "abc",
+    url: "def"
+  });
   const [role, setRole] = useState('teamMember');
+
+  const onSubmitHandler = async()=> {
+    const response = await dispatch(createUser({userId, username, name, email, password, avatar, role}));
+    if(response.payload){
+      setUserId('');
+      setUsername('');
+      setName('');
+      setEmail('');
+      setPassword('');
+      setAvatar({public_id: "abc", url: "def"});
+      setRole('');
+      await dispatch(getAllProjectManagers());
+      await dispatch(getAllTeamLeaders());
+      await dispatch(getAllTeamMembers());
+    }
+  }
 
   return (
     <div className='createUserComp'>
@@ -158,23 +183,23 @@ export const CreateUserComp = () => {
         <div className="right">
           <div className="rows">
             <label htmlFor="">User ID</label>
-            <input type="text" placeholder='User ID' className="inputbox" />
+            <input type="text" placeholder='User ID' className="inputbox" value={userId} onChange={(e)=>setUserId(e.target.value)} />
           </div>
           <div className="rows">
             <label htmlFor="">Username</label>
-            <input type="text" placeholder='Username' className="inputbox" />
+            <input type="text" placeholder='Username' className="inputbox" value={username} onChange={(e)=>setUsername(e.target.value)} />
           </div>
           <div className="rows">
             <label htmlFor="">Name</label>
-            <input type="text" placeholder='Full name' className="inputbox" />
+            <input type="text" placeholder='Full name' className="inputbox" value={name} onChange={(e)=>setName(e.target.value)} />
           </div>
           <div className="rows">
             <label htmlFor="">Password</label>
-            <input type="password" placeholder='Password' className="inputbox" />
+            <input type="password" placeholder='Password' className="inputbox" value={password} onChange={(e)=> setPassword(e.target.value)} />
           </div>
           <div className="rows">
             <label htmlFor="">Email Address</label>
-            <input type="email" placeholder='Email Address' className="inputbox" />
+            <input type="email" placeholder='Email Address' className="inputbox" value={email} onChange={(e)=> setEmail(e.target.value)} />
           </div>
           <div className="rows">
             <label htmlFor="">Role</label>
@@ -192,7 +217,7 @@ export const CreateUserComp = () => {
             </Select>
           </div>
           <div className="rows">
-            <SubmitBtn text={"Create"} />
+            <SubmitBtn text={"Create"} onSubmitHandler={onSubmitHandler} />
           </div>
         </div>
       </div>

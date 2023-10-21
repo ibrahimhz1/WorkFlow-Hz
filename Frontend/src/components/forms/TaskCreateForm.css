@@ -1,0 +1,94 @@
+.divider{
+    width: 100%;
+    border-bottom: 1px solid gray;
+}
+
+#taskCreateFormComp{
+    width: 100%;
+    display: flex;
+    gap: 1.5vmax;
+    align-items: flex-start;
+}
+#taskCreateFormComp .mainTaskSection{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+    padding-right: 1vmax;
+    border-right: 1px solid rgb(56, 56, 56);
+}
+#taskCreateFormComp>.subTaskSection{
+    width: 50%;
+}
+#taskCreateFormComp>.subTaskSection>.subTaskComp{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+}
+
+#taskCreateFormComp .selectTag{
+    height: 2.5vmax;
+    width: 20vmax;
+    background-color: transparent;
+    color: whitesmoke;
+    border-color: #8f9296;
+}
+option{
+    background-color: #101418;
+    color: whitesmoke;
+    font-size: 1.2vmax;
+}
+
+#taskCreateFormComp>.mainTaskSection>.row1>span{
+    font-size: 1.3vmax;
+}
+#taskCreateFormComp>.subTaskSection .row1>span{
+    font-size: 1.3vmax;
+}
+#taskCreateFormComp .requiredSymbol{
+    color: red;
+}
+#taskCreateFormComp .row3{
+    display: flex;
+    flex-direction: column;
+}
+#taskCreateFormComp .row4{
+    display: flex;
+    gap: 2vmax;
+}
+#taskCreateFormComp .row4>.left{
+    flex-direction: column;
+}
+#taskCreateFormComp .row5{
+    display: flex;
+    flex-direction: column;
+}
+
+#taskCreateFormComp .row6{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+#taskCreateFormComp .row7{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#taskCreateFormComp .summaryTextField{
+    width: 90%;
+}
+#taskCreateFormComp .descriptionField{
+    width: 90%;
+    height: 8vmax;
+}
+
+#taskCreateFormComp .row8{
+    display: flex;
+    gap: 2vmax;
+}
+#taskCreateFormComp .row8>.left{
+    display: flex;
+    flex-direction: column;
+}

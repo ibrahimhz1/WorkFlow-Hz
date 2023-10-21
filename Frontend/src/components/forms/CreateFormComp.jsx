@@ -2,38 +2,12 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
-import Select from '@mui/material/Select';
-import Chip from '@mui/material/Chip';
-import Box from '@mui/material/Box';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import { useTheme } from '@mui/material/styles';
 
 import { useDispatch, useSelector } from 'react-redux'
 
 import SubmitBtn from '../submitBtn/SubmitBtn';
-
-const ITEM_HEIGHT = 40;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-
-function getStyles(name, reporters, theme) {
-  return {
-    fontWeight:
-      reporters.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
 const ToggleMode = ({ type, setType }) => {
   return (
@@ -45,6 +19,7 @@ const ToggleMode = ({ type, setType }) => {
           <Button variant="outline-primary" value={"team"} onClick={(e) => setType(e.target.value)} active={type === "team" ? true : false}>Team</Button>
           <Button variant="outline-primary" value={"task"} onClick={(e) => setType(e.target.value)} active={type === "task" ? true : false}>Task</Button>
           <Button variant="outline-primary" value={"user"} onClick={(e) => setType(e.target.value)} active={type === "user" ? true : false}>User</Button>
+          <Button variant="outline-primary" value={"label"} onClick={(e) => setType(e.target.value)} active={type === "label" ? true : false}>Label</Button>
         </ButtonGroup>
       </div>
     </div>
@@ -256,7 +231,6 @@ const TeamCreateForm = () => {
           </div>
           <div className='row2Right'>
             <Form.Select size="sm" value={org.name} onChange={(e) => {
-              setProject({ id: 'id', name: 'select' })
               const org = JSON.parse(e.target.value);
               setOrg({ id: org.id, name: org.name })
               dispatch(getProjectsOfOrg({ orgId: org.id }));
@@ -303,282 +277,16 @@ const TeamCreateForm = () => {
   );
 }
 
-const TaskCreateForm = () => {
-  const theme = useTheme();
-  const [reporters, setReporters] = useState([]);
-  const [subReporters, setSubReporters] = useState([]);
-  const [labels, setLabels] = useState([]);
-  const [subLabels, setSubLabels] = useState([]);
-
-  const handleChangeReporters = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setReporters(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-  const handleChangeSubReporters = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSubReporters(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-  const handleChangeLabels = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setLabels(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-  const handleChangeSubLabels = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setSubLabels(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
-  const onSubmitHandler = () => {
-
-  }
-
-
-  return (
-    <>
-      <div className='org-create-form'>
-        <div className="row1">
-          <Avatar
-            alt="razorPay"
-            src="https://bit.ly/3RZDdpJ"
-            sx={{ width: 70, height: 70 }}
-            style={{ border: '2px dotted gray' }}
-          />
-        </div>
-        <div className="row2">
-          <div className='row2Left'>
-            <p>Task ID</p>
-            <p>Task Name</p>
-            <p>Description</p>
-            <p>Assignees</p>
-            <p>Reporters</p>
-            <p>Labels</p>
-          </div>
-          <div className='row2Right'>
-            <Form.Control type="text" placeholder="Project P-1" />
-            <Form.Control type="text" placeholder="Xmonad" />
-            <Form.Control type="text" placeholder="Description" />
-            <Form.Select size="sm">
-              <option>Ibrahim Hz</option>
-            </Form.Select>
-            {/* <Select
-              sx={{
-                color: "white",
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '.MuiSvgIcon-root ': {
-                  fill: "white !important",
-                }
-              }}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={reporters}
-              onChange={handleChangeReporters}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} style={{ color: "white", backgroundColor: "#999999" }} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, reporters, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-            <Select
-              sx={{
-                color: "white",
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '.MuiSvgIcon-root ': {
-                  fill: "white !important",
-                }
-              }}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={labels}
-              onChange={handleChangeLabels}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} style={{ color: "white", backgroundColor: "#ea9999" }} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, reporters, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select> */}
-          </div>
-
-          <div className='row2LeftMost'>
-            <p>SubTask ID</p>
-            <p>SubTask Name</p>
-            <p>Description</p>
-            <p>Assignees</p>
-            <p>Reporters</p>
-            <p>Labels</p>
-          </div>
-          <div className="row2RightMost">
-            <Form.Control type="text" placeholder="Project P-1" />
-            <Form.Control type="text" placeholder="Xmonad" />
-            <Form.Control type="text" placeholder="Description" />
-            <Form.Select size="sm">
-              <option>Ibrahim Hz</option>
-            </Form.Select>
-            {/* <Select
-              sx={{
-                color: "white",
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '.MuiSvgIcon-root ': {
-                  fill: "white !important",
-                }
-              }}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={subReporters}
-              onChange={handleChangeSubReporters}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} style={{ color: "white", backgroundColor: "#999999" }} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, reporters, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-
-            <Select
-              sx={{
-                color: "white",
-                '.MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(228, 219, 233, 0.25)',
-                },
-                '.MuiSvgIcon-root ': {
-                  fill: "white !important",
-                }
-              }}
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple
-              value={subLabels}
-              onChange={handleChangeSubLabels}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} style={{ color: "white", backgroundColor: "#ea9999" }} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, reporters, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select> */}
-
-          </div>
-        </div>
-      </div>
-      <SubmitBtn onSubmitHandler={onSubmitHandler} text={"Create"} />
-    </>
-  );
-}
-
-
 import { CreateUserComp } from '../headerMenuItems/MenuItemUsers';
 const UserCreateForm = ()=> {
-  
   return (
     <CreateUserComp />
   );
 }
 
 import AddTeamMembers from '../modals/addTeamMembers';
+import TaskCreateForm from './TaskCreateForm';
+import LabelCreateForm from './LabelCreateForm';
 const CreateFormComp = ({ handleClose }) => {
   const [type, setType] = useState('org');
 
@@ -600,7 +308,8 @@ const CreateFormComp = ({ handleClose }) => {
             type === "project" ? <ProjectCreateForm /> :
               type === "team" ? <TeamCreateForm /> :
                 type === "task" ? <TaskCreateForm /> :
-                  type === "user" ? <UserCreateForm /> : ''}
+                  type === "user" ? <UserCreateForm /> : 
+                  type === "label" ? <LabelCreateForm /> : '' }
         </form>
       </div>
     </div>

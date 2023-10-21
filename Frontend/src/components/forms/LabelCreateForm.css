@@ -1,0 +1,26 @@
+#labelCreateFormComp{
+    display: flex;
+    gap: 2vmax;
+    width: 100%;
+}
+#labelCreateFormComp>.labelCreateSection{
+    width: 50%;
+    padding: 1vmax;
+}
+.labelCreateContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2vmax;
+}
+
+#labelCreateFormComp .row3{
+    display: flex;
+    align-items: center;
+    gap: 2vmax;
+}
+
+#labelCreateFormComp>.labelListSection{
+    width: 50%;
+    padding: 1vmax;
+}

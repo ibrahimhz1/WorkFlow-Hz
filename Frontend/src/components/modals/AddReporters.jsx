@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material ui
 import Box from '@mui/material/Box';
@@ -44,10 +44,6 @@ function getComparator(order, orderBy) {
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -389,21 +385,26 @@ const style = {
 };
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import Groups2Icon from '@mui/icons-material/Groups2';
-const AddTeamMembers = ({ selected, setSelected }) => {
+const AddReporters = ({ selected, setSelected }) => {
     const dispatch = useDispatch();
     const addTeamMembersList = useSelector((state) => state.project.addTeamMembers);
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
+    const [open, setOpen] = useState(false);
+    const handleOpen = async() => {
+        await dispatch();
+        setOpen(true);
+    };
     const handleClose = () => {
         dispatch(addTeamMembers(selected));
         setOpen(false)
     };
 
+
+
     return (
         <>
-            <Button onClick={handleOpen}> <GroupAddIcon /> {addTeamMembersList.length === 0 ? "Add" : "Edit"} Members</Button>
+            <Button onClick={handleOpen}> <GroupAddIcon /> {addTeamMembersList.length === 0 ? "Add" : "Edit"} Reporters</Button>
             <div>
-                <Groups2Icon /> {addTeamMembersList.length} Members
+                <Groups2Icon /> {addTeamMembersList.length} Reporters
             </div>
             <Modal
                 open={open}
@@ -413,7 +414,7 @@ const AddTeamMembers = ({ selected, setSelected }) => {
             >
                 <Box sx={{ ...style }} style={{ overflowY: 'scroll' }} className="addTeamMembersModal">
                     <div className='head'>
-                        <h2 id="child-modal-title">Add Members</h2>
+                        <h2 id="child-modal-title">Add Reporters</h2>
                         <Button onClick={handleClose}>Close</Button>
                     </div>
                     <hr />
@@ -426,4 +427,4 @@ const AddTeamMembers = ({ selected, setSelected }) => {
     )
 }
 
-export default AddTeamMembers;
+export default AddReporters;

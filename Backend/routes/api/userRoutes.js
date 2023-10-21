@@ -11,6 +11,7 @@ const {
     loginUser,              
     logoutUser,             
     getLoggedInUserDetails,  // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
+    getProjectManagersOfOrg,
     getAllFounders,
     getAllProjectManagers,
     getAllTeamLeaders,
@@ -37,9 +38,13 @@ router.route('/user/:id')
 
 router.route('/user/:id').get(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getUserDetails);
 
-router.route('/allFounders').get(getAllFounders);
-router.route('/allProjectManagers').get(getAllProjectManagers);
-router.route('/allTeamLeaders').get(getAllTeamLeaders);
-router.route('/allTeamMembers').get(getAllTeamMembers);
+router.route('/org/projectManagers').post(isAuthenticatedUser, authorizedRoles("admin", "founder"), getProjectManagersOfOrg);
+
+
+
+router.route('/allFounders').get(isAuthenticatedUser, authorizedRoles("root", "admin"), getAllFounders);
+router.route('/allProjectManagers').get(isAuthenticatedUser, authorizedRoles("root", "admin", "founder"), getAllProjectManagers);
+router.route('/allTeamLeaders').get(isAuthenticatedUser, authorizedRoles("root", "admin", "founder", "projectManager"), getAllTeamLeaders);
+router.route('/allTeamMembers').get(isAuthenticatedUser, authorizedRoles("root", "admin", "founder", "projectManager"), getAllTeamMembers);
 
 module.exports = router;

@@ -6,11 +6,14 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const LabelModel = require('../models/labelModel');
 // Project Model Import
 const TaskModel = require('../models/taskModel');
+const ProjectModel = require('../models/projectModel');
 
 exports.createLabel = catchAsyncErrors(async (req, res, next) => {
-    const { labelId, labelName } = req.body;
-    const label = await LabelModel.create({ labelId, labelName });
-    if (!label) return res.status(400).json({ message: `${labelName}Label not created` });
+    const { projectId, labelId, labelName } = req.body;
+    let label = await LabelModel.create({ labelId, labelName });
+    label = { _id: label._id };
+    const project = await ProjectModel.updateOne({ _id: projectId }, { $push: { labels: label } });
+    if (!label || !project) return res.status(400).json({ message: `${labelName}Label not created inside an project` });
     res.status(200).json({
         success: true,
         label
@@ -27,45 +30,58 @@ exports.getAllLabels = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Get All Labels of Specific Project
+// exports.getLabelsOfProject = catchAsyncErrors(async (req, res, next) => {
+//     const { projectId } = req.body;
+//     const labels = await TaskModel.find({ projectId: projectId }, { _id: 0, label: 1, 'subTask.label': 1 });
+//     if (!labels || !labels.length) return res.status(400).json({ message: "no labels found" });
+//     const resultantLabels = {
+//         subTaskLabels: labels[0].subTask[0].label,
+//         labels: labels[0].label
+//     }
+
+//     // creating array of labels and filtering only unique values
+
+//     let array = [];
+//     resultantLabels.subTaskLabels.forEach(element => {
+//         array.push(element._id.toString())
+//     });
+//     resultantLabels.labels.forEach(element => {
+//         array.push(element._id.toString())
+//     });
+
+//     function removeDuplicates(arr) {
+//         return arr.filter((item, index) => arr.indexOf(item) === index);
+//     }
+
+//     array = removeDuplicates(array);
+//     // console.log(array);
+//     const labelNames = [];
+//     async function findLabelNames(arr) {
+//         const promises = arr.map(async (element) => {
+//             const name = await LabelModel.find({ _id: element }, { _id: 0, labelName: 1 });
+//             labelNames.push(name[0].labelName)
+//         });
+//         await Promise.all(promises);
+//     }
+//     await findLabelNames(array);
+
+//     res.status(200).json({
+//         success: true,
+//         labels: labelNames
+//     });
+// });
+
+// Get Labels of Specific Project
 exports.getLabelsOfProject = catchAsyncErrors(async (req, res, next) => {
     const { projectId } = req.body;
-    const labels = await TaskModel.find({ projectId: projectId }, { _id: 0, label: 1, 'subTask.label': 1 });
-    if (!labels || !labels.length) return res.status(400).json({ message: "no labels found" });
-    const resultantLabels = {
-        subTaskLabels: labels[0].subTask[0].label,
-        labels: labels[0].label
-    }
+    const labelsArray = await ProjectModel.find({ _id: projectId }, { labels: 1, _id: 0 });
+    let labels = await LabelModel.find({ _id: { $in: labelsArray[0].labels } });
 
-    // creating array of labels and filtering only unique values
-    
-    let array = [];
-    resultantLabels.subTaskLabels.forEach(element => {
-        array.push(element._id.toString())
-    });
-    resultantLabels.labels.forEach(element => {
-        array.push(element._id.toString())
-    });
-
-    function removeDuplicates(arr) {
-        return arr.filter((item, index) => arr.indexOf(item) === index);
-    }
-    
-    array = removeDuplicates(array);
-    // console.log(array);
-    const labelNames = [];
-    async function findLabelNames(arr) {
-        const promises = arr.map(async (element) => {
-            const name = await LabelModel.find({_id: element}, {_id: 0, labelName: 1});
-            labelNames.push(name[0].labelName)
-        });
-        await Promise.all(promises);
-    }
-    await findLabelNames(array);
-
+    if (!labels.length) return res.status(400).json({ message: "Label not found" });
     res.status(200).json({
         success: true,
-        labels: labelNames
-    });
+        labels
+    })
 });
 
 // DELETE

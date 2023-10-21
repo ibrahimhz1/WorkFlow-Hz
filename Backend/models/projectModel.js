@@ -39,7 +39,15 @@ const ProjectSchema = new mongoose.Schema({
                 ref: "User",
             }
         }
-    ]   
+    ],
+    labels: [
+        {
+            _id: {
+                type: mongoose.Schema.ObjectId,
+                ref: "Label"
+            }
+        }
+    ]
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);
