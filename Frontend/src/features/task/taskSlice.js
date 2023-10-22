@@ -158,7 +158,11 @@ export const taskSlice = createSlice({
             state.teamMembersAssignee = [];
         },
         addAssignees: (state, action)=> {
-            state.addAssignees = action.payload;
+            const flattenedArray = [].concat(...Object.values(action.payload));
+            state.addAssignees = flattenedArray;
+        },
+        emptyAssignMembers: (state, action)=> {
+            state.addAssignees = [];
         }
     },
     extraReducers: (builder) => {
@@ -228,7 +232,8 @@ export const {
     emptyAssignPM,
     emptyAssignTL,
     emptyAssignTM,
-    addAssignees
+    addAssignees,
+    emptyAssignMembers
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

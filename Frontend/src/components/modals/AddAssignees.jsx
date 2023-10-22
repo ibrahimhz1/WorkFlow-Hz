@@ -175,7 +175,7 @@ function EnhancedTableToolbar(props) {
                     id="tableTitle"
                     component="div"
                 >
-                    Team Members
+                    {props.title}
                 </Typography>
             )}
 
@@ -199,7 +199,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 import { addAssignees } from '../../features/task/taskSlice';
-const AddMembersTable = ({ role, handleClose, selected, setSelected }) => {
+const AddMembersTable = ({title, role, handleClose, selected, setSelected }) => {
     const dispatch = useDispatch();
     const rows = role === "PM" ? useSelector((state) => state.task.projectManagersAssignee) : 
                  role === "TL" ? useSelector((state) => state.task.teamLeadersAssignee) : 
@@ -262,8 +262,7 @@ const AddMembersTable = ({ role, handleClose, selected, setSelected }) => {
     };
 
     const isSelected = (id) => selected.indexOf(id) !== -1;
-
-    // Avoid a layout jump when reaching the last page with empty rows.
+    
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -277,14 +276,13 @@ const AddMembersTable = ({ role, handleClose, selected, setSelected }) => {
     );
 
     const handleAddMembersSubmit = async () => {
-        await dispatch(addAssignees(selected));
         handleClose();
     }
 
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar onSubmit={handleAddMembersSubmit} numSelected={selected.length} />
+                <EnhancedTableToolbar onSubmit={handleAddMembersSubmit} title={title} numSelected={selected.length} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -365,7 +363,6 @@ const AddMembersTable = ({ role, handleClose, selected, setSelected }) => {
                 control={<Switch checked={dense} onChange={handleChangeDense} />}
                 label="Dense padding"
             />
-
         </Box>
     );
 }
@@ -397,8 +394,9 @@ const AddAssignees = ({ selectedPM, setSelectedPM, selectedTL, setSelectedTL, se
     const handleOpen = async () => {
         setOpen(true);
     };
-    const handleClose = () => {
-        dispatch(addAssignees(selectedPM));
+
+    const handleClose = async() => {
+        await dispatch(addAssignees({selectedPM, selectedTL, selectedTM}));
         setOpen(false)
     };
 
@@ -422,9 +420,9 @@ const AddAssignees = ({ selectedPM, setSelectedPM, selectedTL, setSelectedTL, se
                     </div>
                     <hr />
                     <div className='content'>
-                        <AddMembersTable role="PM" handleClose={handleClose} selected={selectedPM} setSelected={setSelectedPM} />
-                        <AddMembersTable role="TL" handleClose={handleClose} selected={selectedTL} setSelected={setSelectedTL} />
-                        <AddMembersTable role="TM" handleClose={handleClose} selected={selectedTM} setSelected={setSelectedTM} />
+                        <AddMembersTable title={"Project Managers"} role="PM" handleClose={handleClose} selected={selectedPM} setSelected={setSelectedPM} />
+                        <AddMembersTable title={"Team Leaders"} role="TL" handleClose={handleClose} selected={selectedTL} setSelected={setSelectedTL} />
+                        <AddMembersTable title={"Team Members"} role="TM" handleClose={handleClose} selected={selectedTM} setSelected={setSelectedTM} />
                     </div>
                 </Box>
             </Modal>

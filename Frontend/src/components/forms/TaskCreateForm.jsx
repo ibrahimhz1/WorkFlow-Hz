@@ -27,7 +27,8 @@ import {
     getTeamMembersOfTeam,
     emptyAssignPM,
     emptyAssignTL,
-    emptyAssignTM
+    emptyAssignTM,
+    emptyAssignMembers
 } from "../../features/task/taskSlice";
 
 const TaskCreateForm = () => {
@@ -65,6 +66,12 @@ const TaskCreateForm = () => {
     }
     const [reporters, setReporters] = useState([]);
 
+    const emptySelectedMembers = () => {
+        setSelectedPM([]);
+        setSelectedTL([]);
+        setSelectedTM([]);
+    }
+
     const onSubmitHandler = () => {
 
     }
@@ -93,6 +100,9 @@ const TaskCreateForm = () => {
                             dispatch(emptyAssignPM());
                             dispatch(emptyAssignTL());
                             dispatch(emptyAssignTM());
+                            dispatch(emptyAssignMembers());
+                            emptySelectedMembers();
+
                             const org = JSON.parse(e.target.value);
                             setOrg({ id: org.id, name: org.name })
                             if (org.id !== "id") {
@@ -121,6 +131,8 @@ const TaskCreateForm = () => {
                                 dispatch(emptyLabelsArray());
                                 dispatch(emptyAssignTL());
                                 dispatch(emptyAssignTM());
+                                dispatch(emptyAssignMembers());
+                                emptySelectedMembers();
                                 const project = JSON.parse(e.target.value);
                                 setProject({ id: project.id, name: project.name })
                                 if (project.id !== "id") {
@@ -144,6 +156,8 @@ const TaskCreateForm = () => {
                             className="selectTag"
                             aria-label="Default select example"
                             onChange={(e) => {
+                                dispatch(emptyAssignMembers());
+                                emptySelectedMembers();
                                 const team = JSON.parse(e.target.value);
                                 setTeam({ id: team.id, name: team.name })
                                 if (team.id !== "id") {
