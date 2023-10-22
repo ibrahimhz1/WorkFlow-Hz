@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./TaskCreateForm.css";
 import { useTheme } from '@mui/material/styles';
 import Form from 'react-bootstrap/Form';
 import SubmitBtn from '../submitBtn/SubmitBtn';
 import SelectLabel from "../selectField/SelectLabel";
+import LabelSelect from "../selectField/LabelSelect";
 import CreateSubTaskForm from "./CreateSubTaskForm";
 import AddAssignees from "../modals/AddAssignees";
 import AddReporters from '../modals/AddReporters';
@@ -12,13 +13,22 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     getProjectsOfOrg,
     getTeamsOfProject,
-    getProjectManagersOfOrg,
     emptyProjectsArray,
     emptyTeamsArray,
     emptyLabelsArray,
-    getLabelsOfProject
+    getLabelsOfProject,
+    getProjectManagersOfOrg,
+    getTeamLeadersOfOrg,
+    getTeamMembersOfOrg,
+    getProjectManagerOfProject,
+    getTeamLeadersOfProject,
+    getTeamMembersOfProject,
+    getTeamLeaderOfTeam,
+    getTeamMembersOfTeam,
+    emptyAssignPM,
+    emptyAssignTL,
+    emptyAssignTM
 } from "../../features/task/taskSlice";
-import LabelSelect from "../selectField/LabelSelect";
 
 const TaskCreateForm = () => {
     const dispatch = useDispatch();
@@ -29,6 +39,11 @@ const TaskCreateForm = () => {
     const projects = useSelector((state) => state.task.projectsOfOrg);
     const labels = useSelector((state) => state.task.labelsOfProject);
 
+    // for handling tasks form datas for manipulating form objects
+    const projectManagersAssignee = useSelector((state) => state.task.projectManagersAssignee);
+    const teamLeadersAssignee = useSelector((state) => state.task.teamLeadersAssignee);
+    const teamMembersAssignee = useSelector((state) => state.task.teamMembersAssignee);
+
     const [org, setOrg] = useState({ id: 'id', name: 'select' });
     const [project, setProject] = useState({ id: 'id', name: 'select' });
     const [team, setTeam] = useState({ id: 'id', name: 'select' });
@@ -36,9 +51,10 @@ const TaskCreateForm = () => {
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDesc, setTaskDesc] = useState('');
     const reporterObj = useSelector((state) => state.user.loggedInUser);
-    const [selectedPM, setSelectedPM] = useState(useSelector((state) => state.task.addProjectManagers));
-    const [selectedTM, setSelectedTM] = useState(useSelector((state) => state.task.addTeamMembers));
-    const [selectedTL, setSelectedTL] = useState(useSelector((state) => state.task.addTeamLeaders));
+
+    const [selectedPM, setSelectedPM] = useState(useSelector((state) => state.task.projectManagersAssignee));
+    const [selectedTL, setSelectedTL] = useState(useSelector((state) => state.task.teamLeadersAssignee));
+    const [selectedTM, setSelectedTM] = useState(useSelector((state) => state.task.teamMembersAssignee));
 
     const reporter = {
         id: reporterObj._id,
@@ -68,17 +84,22 @@ const TaskCreateForm = () => {
                     <Form.Select
                         className="selectTag"
                         aria-label="Default select example"
-                        onChange={(e) => {
+                        onChange={async (e) => {
                             setProject({ id: 'id', name: 'select' });
                             setTeam({ id: 'id', name: 'select' })
                             dispatch(emptyProjectsArray());
                             dispatch(emptyTeamsArray());
                             dispatch(emptyLabelsArray());
+                            dispatch(emptyAssignPM());
+                            dispatch(emptyAssignTL());
+                            dispatch(emptyAssignTM());
                             const org = JSON.parse(e.target.value);
                             setOrg({ id: org.id, name: org.name })
                             if (org.id !== "id") {
                                 dispatch(getProjectsOfOrg({ orgId: org.id }));
-                                dispatch(getProjectManagersOfOrg({orgId: org.id}))
+                                dispatch(getProjectManagersOfOrg({ orgId: org.id }));
+                                dispatch(getTeamLeadersOfOrg({ orgId: org.id }));
+                                dispatch(getTeamMembersOfOrg({ orgId: org.id }));
                             }
                         }}
                     >
@@ -98,11 +119,16 @@ const TaskCreateForm = () => {
                                 setTeam({ id: 'id', name: 'select' })
                                 dispatch(emptyTeamsArray());
                                 dispatch(emptyLabelsArray());
+                                dispatch(emptyAssignTL());
+                                dispatch(emptyAssignTM());
                                 const project = JSON.parse(e.target.value);
                                 setProject({ id: project.id, name: project.name })
                                 if (project.id !== "id") {
                                     dispatch(getTeamsOfProject({ projectId: project.id }));
                                     dispatch(getLabelsOfProject({ projectId: project.id }));
+                                    dispatch(getProjectManagerOfProject({ projectId: project.id }));
+                                    dispatch(getTeamLeadersOfProject({ projectId: project.id }));
+                                    dispatch(getTeamMembersOfProject({ projectId: project.id }));
                                 }
                             }}
                         >
@@ -120,8 +146,10 @@ const TaskCreateForm = () => {
                             onChange={(e) => {
                                 const team = JSON.parse(e.target.value);
                                 setTeam({ id: team.id, name: team.name })
-                                if (team.id !== "id") { }
-                                // dispatch(getTeamsOfProject({ projectId: project.id }));
+                                if (team.id !== "id") {
+                                    dispatch(getTeamLeaderOfTeam({ teamId: team.id }));
+                                    dispatch(getTeamMembersOfTeam({ teamId: team.id }));
+                                }
                             }}
                         >
                             <option value={JSON.stringify({ id: 'id', name: 'select' })}>{'select'}</option>

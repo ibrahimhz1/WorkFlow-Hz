@@ -284,7 +284,7 @@ const UserCreateForm = ()=> {
   );
 }
 
-import AddTeamMembers from '../modals/addTeamMembers';
+import AddTeamMembers from '../modals/AddTeamMembers';
 import TaskCreateForm from './TaskCreateForm';
 import LabelCreateForm from './LabelCreateForm';
 const CreateFormComp = ({ handleClose }) => {

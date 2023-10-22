@@ -198,10 +198,13 @@ EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };
 
-import { addTeamMembers } from '../../features/project/projectSlice'
-const AddMembersTable = ({ handleClose, selected, setSelected }) => {
+import { addAssignees } from '../../features/task/taskSlice';
+const AddMembersTable = ({ role, handleClose, selected, setSelected }) => {
     const dispatch = useDispatch();
-    const rows = useSelector((state) => state.user.teamMembers);
+    const rows = role === "PM" ? useSelector((state) => state.task.projectManagersAssignee) : 
+                 role === "TL" ? useSelector((state) => state.task.teamLeadersAssignee) : 
+                 role === "TM" ? useSelector((state) => state.task.teamMembersAssignee) : [];
+    
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('names');
 
@@ -274,7 +277,7 @@ const AddMembersTable = ({ handleClose, selected, setSelected }) => {
     );
 
     const handleAddMembersSubmit = async () => {
-        await dispatch(addTeamMembers(selected));
+        await dispatch(addAssignees(selected));
         handleClose();
     }
 
@@ -385,25 +388,27 @@ const style = {
 };
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import Groups2Icon from '@mui/icons-material/Groups2';
-const AddAssignees = ({ selected, setSelected }) => {
+const AddAssignees = ({ selectedPM, setSelectedPM, selectedTL, setSelectedTL, selectedTM, setSelectedTM }) => {
     const dispatch = useDispatch();
-    const addTeamMembersList = useSelector((state) => state.project.addTeamMembers);
+
+    const totalAssignees = useSelector((state)=> state.task.addAssignees);
+
     const [open, setOpen] = useState(false);
     const handleOpen = async () => {
         setOpen(true);
     };
     const handleClose = () => {
-        dispatch(addTeamMembers(selected));
+        dispatch(addAssignees(selectedPM));
         setOpen(false)
     };
 
     return (
         <>
             <div>
-            <Button style={{padding: '0.25vmax 0.5vmax'}} onClick={handleOpen}> <GroupAddIcon style={{fontSize: '1.3vmax'}} /><span style={{fontSize: '1vmax'}}> {addTeamMembersList.length === 0 ? "Add" : "Edit"}</span></Button>
-            <Groups2Icon style={{marginLeft: '1vmax'}} /> {addTeamMembersList.length} Assignees
+                <Button style={{ padding: '0.25vmax 0.5vmax' }} onClick={handleOpen}> <GroupAddIcon style={{ fontSize: '1.3vmax' }} /><span style={{ fontSize: '1vmax' }}> {totalAssignees.length === 0 ? "Add" : "Edit"}</span></Button>
+                <Groups2Icon style={{ marginLeft: '1vmax' }} /> {totalAssignees.length} Assignees
             </div>
-            
+
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -417,7 +422,9 @@ const AddAssignees = ({ selected, setSelected }) => {
                     </div>
                     <hr />
                     <div className='content'>
-                        <AddMembersTable handleClose={handleClose} selected={selected} setSelected={setSelected} />
+                        <AddMembersTable role="PM" handleClose={handleClose} selected={selectedPM} setSelected={setSelectedPM} />
+                        <AddMembersTable role="TL" handleClose={handleClose} selected={selectedTL} setSelected={setSelectedTL} />
+                        <AddMembersTable role="TM" handleClose={handleClose} selected={selectedTM} setSelected={setSelectedTM} />
                     </div>
                 </Box>
             </Modal>

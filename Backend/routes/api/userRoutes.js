@@ -11,12 +11,22 @@ const {
     loginUser,              
     logoutUser,             
     getLoggedInUserDetails,  // ["admin", "founder", "projectManager", "teamLeader", "teamMember"]
+    
     getProjectManagersOfOrg,
+    getTeamLeadersOfOrg,
+    getTeamMembersOfOrg,
+    
+    getProjectManagerOfProject,
+    getTeamLeadersOfProject,
+    getTeamMembersOfProject,
+
+    getTeamLeaderOfTeam,
+    getTeamMembersOfTeam,
+
     getAllFounders,
     getAllProjectManagers,
     getAllTeamLeaders,
-    getAllTeamMembers
-    
+    getAllTeamMembers,
 } = require('../../controllers/userController');
 
 const { isAuthenticatedUser, authorizedRoles } = require('../../middlewares/auth');
@@ -39,7 +49,15 @@ router.route('/user/:id')
 router.route('/user/:id').get(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager", "teamLeader", "teamMember"), getUserDetails);
 
 router.route('/org/projectManagers').post(isAuthenticatedUser, authorizedRoles("admin", "founder"), getProjectManagersOfOrg);
+router.route('/org/teamLeaders').post(isAuthenticatedUser, authorizedRoles("admin", "founder"), getTeamLeadersOfOrg);
+router.route('/org/teamMembers').post(isAuthenticatedUser, authorizedRoles("admin", "founder"), getTeamMembersOfOrg);
 
+router.route('/project/projectManager').post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), getProjectManagerOfProject);
+router.route('/project/teamLeaders').post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), getTeamLeadersOfProject);
+router.route('/project/teamMembers').post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), getTeamMembersOfProject);
+
+router.route('/team/teamLeader').post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), getTeamLeaderOfTeam);
+router.route('/team/teamMembers').post(isAuthenticatedUser, authorizedRoles("admin", "founder", "projectManager"), getTeamMembersOfTeam);
 
 
 router.route('/allFounders').get(isAuthenticatedUser, authorizedRoles("root", "admin"), getAllFounders);

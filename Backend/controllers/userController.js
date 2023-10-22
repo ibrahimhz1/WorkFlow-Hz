@@ -4,10 +4,10 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 // Employee Model Import
 const UserModel = require('../models/userModel');
 const ProjectModel = require('../models/projectModel');
+const TeamModel = require('../models/teamModel');
 
 // JWT Send Token
 const sendToken = require('../utils/jwtToken');
-const { ObjectId } = require('mongodb');
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     const { userId, username, name, email, password, avatar, role } = req.body;
@@ -117,12 +117,15 @@ exports.getLoggedInUserDetails = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+
+
+
+
 // GET All Project Managers of Organisation
 exports.getProjectManagersOfOrg = catchAsyncErrors(async (req, res, next) => {
     const { orgId } = req.body;
     let projectMans = await ProjectModel.find({ orgId: orgId }, { projectLead: 1, _id: 0 });
     projectMans = projectMans.map(man => man.projectLead);
-    console.log(projectMans);
 
     if (!projectMans.length) return next(new ErrorHandler("No project managers found", 401));
     projectMans = await UserModel.find({ _id: { $in: projectMans } });
@@ -134,8 +137,115 @@ exports.getProjectManagersOfOrg = catchAsyncErrors(async (req, res, next) => {
 });
 
 // GET All Team Leaders of Organisation
+exports.getTeamLeadersOfOrg = catchAsyncErrors(async (req, res, next) => {
+    const { orgId } = req.body;
+    let teamLeaders = await TeamModel.find({ orgId: orgId }, { teamLeader: 1, _id: 0 });
+    if (!teamLeaders.length) return next(new ErrorHandler("No Team Leader found", 401));
+    teamLeaders = teamLeaders.map((lead) => lead.teamLeader);
+    teamLeaders = await UserModel.find({ _id: { $in: teamLeaders } });
+    if (!teamLeaders.length) return next(new ErrorHandler("No Team Leader found", 401));
+    res.status(200).json({
+        success: true,
+        teamLeaders
+    })
+});
 
 // GET All Team Members of Organisation
+exports.getTeamMembersOfOrg = catchAsyncErrors(async (req, res, next) => {
+    const { orgId } = req.body;
+    let teamMembers = await TeamModel.find({ orgId }, { members: 1, _id: 0 });
+    if (!teamMembers.length) return next(new ErrorHandler("No team members found", 401));
+    let arrayTM = [];
+    teamMembers.forEach(member => {
+        member.members.forEach(mem => arrayTM.push(mem._id))
+    });
+    teamMembers = await UserModel.find({ _id: { $in: arrayTM } });
+    if (!teamMembers.length) return next(new ErrorHandler("No team members found", 401));
+    res.status(200).json({
+        message: true,
+        teamMembers
+    });
+});
+
+// GET ProjectManger of Project
+exports.getProjectManagerOfProject = catchAsyncErrors(async (req, res, next) => {
+    const { projectId } = req.body;
+    let projectMan = await ProjectModel.find({ _id: projectId }, { projectLead: 1, _id: 0 });
+    if (!projectMan) return next(new ErrorHandler("No project manager", 401));
+    projectMan = projectMan[0].projectLead;
+    projectMan = await UserModel.find({ _id: projectMan });
+    res.status(200).json({
+        success: true,
+        projectMan
+    });
+});
+
+// GET Team Leaders of Project
+exports.getTeamLeadersOfProject = catchAsyncErrors(async (req, res, next) => {
+    const { projectId } = req.body;
+    let teamLeaders = await TeamModel.find({ projectId }, { teamLeader: 1, _id: 0 });
+    if (!teamLeaders.length) return next(new ErrorHandler("No Team Leaders found", 401));
+    const teamLeadersArray = [];
+    teamLeaders.forEach((lead) => teamLeadersArray.push(lead.teamLeader));
+    teamLeaders = await UserModel.find({ _id: { $in: teamLeadersArray } });
+    if (!teamLeaders.length) return next(new ErrorHandler("No Team Leaders found", 401));
+    res.status(200).json({
+        success: true,
+        teamLeaders
+    })
+});
+
+exports.getTeamMembersOfProject = catchAsyncErrors(async (req, res, next) => {
+    const { projectId } = req.body;
+    let teamMembers = await TeamModel.find({ projectId }, { members: 1, _id: 0 });
+    if (!teamMembers.length) return next(new ErrorHandler("No team members found", 401));
+    let arrayTM = [];
+    teamMembers.forEach(member => {
+        member.members.forEach(mem => arrayTM.push(mem._id))
+    });
+    teamMembers = await UserModel.find({ _id: { $in: arrayTM } });
+    if (!teamMembers.length) return next(new ErrorHandler("No team members found", 401));
+    res.status(200).json({
+        message: true,
+        teamMembers
+    });
+})
+
+exports.getTeamLeaderOfTeam = catchAsyncErrors(async (req, res, next) => {
+    const { teamId } = req.body;
+    let teamLeader = await TeamModel.find({ _id: teamId }, { teamLeader: 1, _id: 0 });
+    if (!teamLeader.length) return next(new ErrorHandler("No Team leader found", 401));
+    teamLeader = (teamLeader[0].teamLeader);
+    teamLeader = await UserModel.find({ _id: teamLeader });
+    if (!teamLeader.length) return next(new ErrorHandler("No Team leader found", 401));
+    res.status(200).json({
+        success: true,
+        teamLeader
+    });
+});
+
+exports.getTeamMembersOfTeam = catchAsyncErrors(async (req, res, next) => {
+    const { teamId } = req.body;
+    let teamMembers = await TeamModel.find({ _id: teamId }, { members: 1, _id: 0 });
+    if (!teamMembers.length) return next(new ErrorHandler("No team members found", 401));
+    let arrayTM = [];
+    teamMembers.forEach(member => {
+        member.members.forEach(mem => arrayTM.push(mem._id))
+    });
+    teamMembers = await UserModel.find({ _id: { $in: arrayTM } });
+    if (!teamMembers.length) return next(new ErrorHandler("No team members found", 401));
+    res.status(200).json({
+        message: true,
+        teamMembers
+    });
+});
+
+
+
+
+// Admin routes for All Details of Users
+
+
 exports.getAllFounders = catchAsyncErrors(async (req, res, next) => {
     const founders = await UserModel.find({ role: "founder" });
     if (!founders) {
