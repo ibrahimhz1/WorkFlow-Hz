@@ -12,7 +12,7 @@ const initialState = {
     teamLeadersOfProject: [],
     teamMembersOfProject: [],
     teamsOfProject: [],
-    labelsOfProject: [],
+    labelsOfProject: [{_id: '', labelName: ''}],
     teamLeaderOfTeam: null,
     teamMembersOfTeam: [],
     projectManagersAssignee: [],

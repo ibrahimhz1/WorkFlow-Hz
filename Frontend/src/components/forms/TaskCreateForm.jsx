@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 import SubmitBtn from '../submitBtn/SubmitBtn';
 import SelectLabel from "../selectField/SelectLabel";
 import LabelSelect from "../selectField/LabelSelect";
-import CreateSubTaskForm from "./CreateSubTaskForm";
 import AddAssignees from "../modals/AddAssignees";
 import AddReporters from '../modals/AddReporters';
 
@@ -30,9 +29,12 @@ import {
     emptyAssignTM,
     emptyAssignMembers
 } from "../../features/task/taskSlice";
+import CreateSubTask from "./CreateSubTask";
 
 const TaskCreateForm = () => {
     const dispatch = useDispatch();
+    const names = useSelector((state) => state.task.labelsOfProject);
+    const [selectedNames, setSelectedNames] = useState([{_id: "", labelName: ""}]);
 
     const theme = useTheme();
     const orgs = useSelector((state) => state.org.orgs);
@@ -240,8 +242,7 @@ const TaskCreateForm = () => {
                     </Form.Select>
                 </div>
                 <div className="row10">
-                    {/* <SelectLabel /> */}
-                    <LabelSelect />
+                    <SelectLabel names={names} selectedNames={setSelectedNames} setSelectedNames={setSelectedNames} />
                 </div>
                 <div className="row11">
 
@@ -254,7 +255,7 @@ const TaskCreateForm = () => {
                 </div>
             </div>
             <div className="subTaskSection">
-                <CreateSubTaskForm />
+                <CreateSubTask reporter={reporter.name} />
             </div>
         </div>
     );
