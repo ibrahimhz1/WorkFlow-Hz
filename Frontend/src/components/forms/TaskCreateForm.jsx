@@ -34,7 +34,7 @@ import CreateSubTask from "./CreateSubTask";
 const TaskCreateForm = () => {
     const dispatch = useDispatch();
     const names = useSelector((state) => state.task.labelsOfProject);
-    const [selectedNames, setSelectedNames] = useState([{_id: "", labelName: ""}]);
+    const [selectedNames, setSelectedNames] = useState([]);
 
     const theme = useTheme();
     const orgs = useSelector((state) => state.org.orgs);
@@ -242,7 +242,7 @@ const TaskCreateForm = () => {
                     </Form.Select>
                 </div>
                 <div className="row10">
-                    <SelectLabel names={names} selectedNames={setSelectedNames} setSelectedNames={setSelectedNames} />
+                    <SelectLabel names={names} selectedNames={selectedNames} setSelectedNames={setSelectedNames} />
                 </div>
                 <div className="row11">
 
