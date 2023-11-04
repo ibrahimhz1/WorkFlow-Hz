@@ -4,9 +4,9 @@ import Form from 'react-bootstrap/Form';
 import SelectLabel from "../selectField/SelectLabel";
 import { useSelector } from 'react-redux';
 
-const SubTaskComp = ({ reporter, subTask, subtaskData, setSubtaskData }) => {
-    const names = useSelector((state) => state.task.labelsOfProject);
-    const [selectedNames, setSelectedNames] = useState([]);
+const SubTaskComp = ({ reporter, subTask, subtaskData, setSubtaskData,  names, selectedNames, setSelectedNames }) => {
+    // const names = useSelector((state) => state.task.labelsOfProject);
+    // const [selectedNames, setSelectedNames] = useState([]);
     const onSubmitHandler = () => {
 
     }

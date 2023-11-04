@@ -135,6 +135,7 @@ const TaskCreateForm = () => {
                                 dispatch(emptyAssignTM());
                                 dispatch(emptyAssignMembers());
                                 emptySelectedMembers();
+                                setSelectedNames([]);
                                 const project = JSON.parse(e.target.value);
                                 setProject({ id: project.id, name: project.name })
                                 if (project.id !== "id") {
@@ -255,7 +256,7 @@ const TaskCreateForm = () => {
                 </div>
             </div>
             <div className="subTaskSection">
-                <CreateSubTask reporter={reporter.name} />
+                <CreateSubTask reporter={reporter.name} names={names} selectedNames={selectedNames} setSelectedNames={setSelectedNames} />
             </div>
         </div>
     );

@@ -89,9 +89,8 @@ const EditableSubTask = ({ subTask }) => {
 }
 
 
-const CreateSubTask = ({ reporter }) => {
-    const names = useSelector((state) => state.task.labelsOfProject);
-    const [selectedNames, setSelectedNames] = useState([]);
+const CreateSubTask = ({ reporter, names, selectedNames, setSelectedNames }) => {
+
     const [subtasks, setSubtasks] = useState([]);
     const [subtaskData, setSubtaskData] = useState({
         issueType: 'select',
@@ -121,7 +120,7 @@ const CreateSubTask = ({ reporter }) => {
             {subtasks.map((subtask, index) => (
                 <EditableSubTask key={index} subTask={subtask} />
             ))}
-            <SubTaskComp reporter={reporter} subtaskData={subtaskData} setSubtaskData={setSubtaskData} />
+            <SubTaskComp reporter={reporter} subtaskData={subtaskData} setSubtaskData={setSubtaskData} names={names} selectedNames={selectedNames} setSelectedNames={setSelectedNames} />
 
             <Button style={{ width: "30vmax" }} variant="outline-light" onClick={addSubtask}>Add Subtask</Button>
         </div>
