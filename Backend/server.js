@@ -46,7 +46,7 @@ app.use('/api', task);
 app.use('/api', label);
 app.use('/api', user);
 
-// 404 routes
+// 404 routes updated
 app.all('*', (req, res) => {
     res.status(404);
     if (req.accepts('html')) {
