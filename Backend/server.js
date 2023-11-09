@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3500;
 // CORS options
 const corsOptions = require('./configs/corsOptions');
 
-// middlewares
+// middlewares import
 app.use(logger);
 app.use(credentials);
 app.use(cors(corsOptions));
